@@ -1,6 +1,6 @@
 <html>
 <head></head>
 <body>
-    <h3>Tantárgyak</h3>
+    <h3>Üdvözlünk </h3>
 </body>
 </html>
