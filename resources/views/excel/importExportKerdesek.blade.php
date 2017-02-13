@@ -4,7 +4,7 @@
 <body>
     <h3>Add question:</h3>
     <div>
-        <form action="{{ URL::to('addQuestion') }}" method="post">
+        <form action="{{ URL::to('addKerdes') }}" method="post">
             <input type="hidden" name="_token" value="{!! csrf_token() !!}">
             <input type="text" class="form-control" name="question">
             <input type="submit" class="btn btn-primary" value="Add">
@@ -24,7 +24,7 @@
         </div>
     @endif
 
-    <form action="{{ URL::to('importQuestions') }}" method="post" enctype="multipart/form-data">
+    <form action="{{ URL::to('importKerdesek') }}" method="post" enctype="multipart/form-data">
         <input type="file" name="import_file" />
         {{ csrf_field() }}
         <br/>
@@ -34,7 +34,7 @@
 
     <h3>Export Questions from database</h3>
     <div>
-        <a href="{{ url('exportQuestions') }}"><button>Export</button></a>
+        <a href="{{ url('exportKerdesek') }}"><button>Export</button></a>
     </div>
 
 

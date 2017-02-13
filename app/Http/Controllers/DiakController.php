@@ -92,8 +92,8 @@ class DiakController extends Controller
 
     public function exportDiak(Request $request)
     {
-        $data = Student::get()->toArray();
-        return Excel::create('neptuncodes', function($excel) use ($data) {
+        $data = Diak::get()->toArray();
+        return Excel::create('neptunkodok', function($excel) use ($data) {
             $excel->sheet('mySheet', function($sheet) use ($data)
             {
                 $sheet->fromArray($data);

@@ -4,11 +4,11 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Question extends Model
+class Kerdes extends Model
 {
-    protected $table = 'questions';
+    protected $table = 'kerdesek';
 
     protected $fillable = [
-        'question',
+        'kerdes'
     ];
 }
