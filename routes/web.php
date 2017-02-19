@@ -39,4 +39,6 @@ Route::post('importDiak', 'DiakController@importDiak');
 Route::get('exportDiak', 'DiakController@exportDiak');
 
 Route::post('generateKerdoiv','KerdoivController@generateKerdoiv');
-Route::get('kerdoivKitoltes','KerdoivController@showView');
+Route::post('kerdoivKitoltes','KerdoivController@kerdoivKitoltes');
+
+Route::get('statisztikaTantargyak','Statisztika@getTantargyak');

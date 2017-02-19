@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "31047c9993613af81a7f5775a86999e0",
-    "content-hash": "4b6aa87d8287e470df85c053a4eec517",
+    "hash": "48cd66908aecf884d5b4380cd7a70252",
+    "content-hash": "29fff417276b8f0aa26607c4863029ee",
     "packages": [
         {
             "name": "classpreloader/classpreloader",
@@ -160,6 +160,103 @@
                 "string"
             ],
             "time": "2015-11-06 14:35:42"
+        },
+        {
+            "name": "evercode1/view-maker",
+            "version": "3.5.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/evercode1/view-maker.git",
+                "reference": "033705485894d1eb5d2f3151e679d45bb2ad0bfc"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/evercode1/view-maker/zipball/033705485894d1eb5d2f3151e679d45bb2ad0bfc",
+                "reference": "033705485894d1eb5d2f3151e679d45bb2ad0bfc",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/support": "~5.1",
+                "php": "5.6.*|~7.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Evercode1\\ViewMaker\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Bill Keck",
+                    "email": "ikon321@yahoo.com",
+                    "homepage": "https://github.com/evercode1",
+                    "role": "Developer"
+                }
+            ],
+            "description": "ViewMaker for Laravel 5.2 Artisan Command",
+            "homepage": "https://github.com/evercode1/view-maker",
+            "keywords": [
+                "Evercode1",
+                "Laravel 5.2",
+                "artisan",
+                "laravel",
+                "view-maker"
+            ],
+            "time": "2016-08-26 03:45:06"
+        },
+        {
+            "name": "fx3costa/laravelchartjs",
+            "version": "2.2.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/fxcosta/laravel-chartjs.git",
+                "reference": "e90a0fb789e159d35ce0b60f4e3c49e0c503cda8"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/fxcosta/laravel-chartjs/zipball/e90a0fb789e159d35ce0b60f4e3c49e0c503cda8",
+                "reference": "e90a0fb789e159d35ce0b60f4e3c49e0c503cda8",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/support": "5.1.* || 5.2.* || 5.3.* || 5.4.*",
+                "php": ">=5.6.4"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Fx3costa\\LaravelChartJs\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Felix",
+                    "email": "fx3costa@gmail.com"
+                }
+            ],
+            "description": "Simple package to facilitate and automate the use of charts in Laravel 5.x using Chartjs v2 library",
+            "keywords": [
+                "chart",
+                "chartjs",
+                "fx3costa",
+                "graphics",
+                "laravel5",
+                "reports"
+            ],
+            "time": "2017-02-09 14:17:49"
         },
         {
             "name": "jakub-onderka/php-console-color",
