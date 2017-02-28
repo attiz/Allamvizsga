@@ -18,14 +18,15 @@ Route::get('/', function () {
 Route::get('loginDiak', 'DiakController@showLogin');
 Route::post('loginDiak', 'DiakController@loginDiak');
 
-Route::get('loginUser', 'UserController@showLogin');
-Route::post('loginUser', 'UserController@loginUser');
+Route::get('loginTanar', 'TanarController@showLogin');
+Route::post('loginTanar', 'TanarController@loginTanar');
 
 Route::get('selectTantargyak','TantargyController@getTantargyak');
+Route::post('generateTantargyak','TantargyController@generateTantargyak');
 
-Route::get('importExportUsers', 'UserController@showView');
-Route::post('importUsers', 'UserController@importUsers');
-Route::get('exportUsers', 'UserController@exportUsers');
+Route::get('importExportTanar', 'TanarController@showView');
+Route::post('importTanar', 'TanarController@importTanar');
+Route::get('exportTanar', 'TanarController@exportTanar');
 
 Route::get('importExportKerdesek', 'KerdesController@showView');
 Route::post('addKerdes', 'KerdesController@addKerdes');
@@ -42,3 +43,8 @@ Route::post('generateKerdoiv','KerdoivController@generateKerdoiv');
 Route::post('kerdoivKitoltes','KerdoivController@kerdoivKitoltes');
 
 Route::get('statisztikaTantargyak','Statisztika@getTantargyak');
+
+Route::post('feltoltTantargy', 'OrarendController@feltoltTantargy');
+Route::post('feltoltOsztaly', 'OrarendController@feltoltOsztaly');
+Route::post('feltoltOrak', 'OrarendController@feltoltOrak');
+Route::get('feldolgozOrarend', 'OrarendController@showView');

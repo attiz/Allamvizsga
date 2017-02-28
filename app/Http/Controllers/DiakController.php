@@ -24,6 +24,7 @@ class DiakController extends Controller
     }
 
     public function loginDiak(){
+        session_start();
         $kod = Input::get("neptun");
         $result = DB::select( DB::raw("SELECT Count(*) as ossz FROM diak WHERE neptun = :somevariable"), array(
             'somevariable' => $kod,
@@ -31,13 +32,13 @@ class DiakController extends Controller
         $acces = $result[0]->ossz;
 
         if ($acces == 1){
+            $_SESSION['neptunkod'] = $kod;
             return Redirect::to('selectTantargyak');
+
         }
         else{
             return back()->with('success','Nincs ilyen neptun kód!');
         }
-
-        echo $acces;
     }
 
     public function addDiak(Request $request){
@@ -73,11 +74,9 @@ class DiakController extends Controller
 
             if(!empty($data) && $data->count()){
 
-                foreach ($data->toArray() as $key => $value) {
-                    if(!empty($value)){
-                        foreach ($value as $v) {
-                            $insert[] = ['neptun' => $v['neptun'],'szak_id' => $v['szak_id']];
-                        }
+                foreach ($data as $neptunkodok) {
+                    if(!empty($neptunkodok)){
+                        $insert[] = ['neptun' => $neptunkodok['hallgato_neptun_kodja']];
                     }
                 }
 
@@ -85,8 +84,10 @@ class DiakController extends Controller
                     Diak::insert($insert);
                     return back()->with('success','Sikeres!');
                 }
+
             }
         }
+
         return back()->with('error','Valasszon ki egy fajlt!');
     }
 

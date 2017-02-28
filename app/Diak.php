@@ -14,6 +14,6 @@ class Diak extends Model
     protected $table = 'diak';
 
     protected $fillable = [
-        'neptun','szak_id'
+        'neptun',
     ];
 }

@@ -9,6 +9,7 @@ class Kerdes extends Model
     protected $table = 'kerdesek';
 
     protected $fillable = [
-        'kerdes'
+        'kerdes',
+        'valasz'
     ];
 }

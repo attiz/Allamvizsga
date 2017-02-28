@@ -15,7 +15,7 @@
     </div>
 @endif
 
-<form action="{{ URL::to('importUsers') }}" method="post" enctype="multipart/form-data">
+<form action="{{ URL::to('importTanar') }}" method="post" enctype="multipart/form-data">
     <input type="hidden" name="_token" value="{{ csrf_token() }}">
     <input type="file" name="import_file" />
     {{ csrf_field() }}
@@ -26,7 +26,7 @@
 
 <h3>Export Users from database</h3>
 <div>
-    <a href="{{ url('exportUsers') }}"><button>Export</button></a>
+    <a href="{{ url('exportTanar') }}"><button>Export</button></a>
 </div>
 
 

@@ -2,7 +2,7 @@
 <html>
 <div class="login-page">
     <div class="form">
-        <form class="login-form" action="{{ URL::to('loginUser') }}" method="post">
+        <form class="login-form" action="{{ URL::to('loginTanar') }}" method="post">
             <h2>Tanár</h2>
             @if ($message = Session::get('success'))
                 <div class="alert alert-success" role="alert">

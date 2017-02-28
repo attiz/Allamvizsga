@@ -17,18 +17,17 @@ class KerdesController extends Controller
 
     public function importKerdesek(Request $request)
     {
-        if($request->hasFile('import_file')){
+        if($request->hasFile('import_file')) {
             $path = $request->file('import_file')->getRealPath();
 
-            $data = Excel::load($path, function($reader) {})->get();
+            $data = Excel::load($path, function ($reader) {
+            })->get();
 
-            if(!empty($data) && $data->count()){
+            if (!empty($data) && $data->count()) {
 
-                foreach ($data->toArray() as $key => $value) {
-                    if(!empty($value)){
-                        foreach ($value as $v) {
-                            $insert[] = ['kerdes' => $v['kerdes']];
-                        }
+                foreach ($data as $kerdesek) {
+                    if (!empty($kerdesek)) {
+                        $insert[] = ['kerdes' => $kerdesek['kerdes'], 'valasz' => $kerdesek['valasz']];
                     }
                 }
 
@@ -36,6 +35,7 @@ class KerdesController extends Controller
                     Kerdes::insert($insert);
                     return back()->with('success','Sikeres!');
                 }
+
             }
         }
         return back()->with('error','Valasszon ki egy fajlt!');

@@ -4,12 +4,12 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Tantargy extends Model
+class Szak extends Model
 {
-    protected $table = 'tantargy';
+    protected $table = 'szak';
 
     protected $fillable = [
-        'nev',
+        'szaknev',
         'rovidites'
     ];
 }

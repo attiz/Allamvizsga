@@ -4,13 +4,13 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-use App\User;
+use App\Tanar;
 use Excel;
 use DB;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Redirect;
 
-class UserController extends Controller
+class TanarController extends Controller
 {
     public function showView()
     {
@@ -19,27 +19,27 @@ class UserController extends Controller
 
     public function showLogin()
     {
-        return view('login.loginUser');
+        return view('login.loginTanar');
     }
 
-    public function loginUser(){
+    public function loginTanar(){
         $username = Input::get("username");
         $passw = Input::get("passw");
-        $result = DB::select( DB::raw("SELECT Count(*) as ossz FROM users WHERE username like :username and password like :passw"), array(
-            'username' => $username,
-            'passw' => $passw,
+        $result = DB::select( DB::raw("SELECT Count(*) as ossz FROM tanar WHERE felhasznalo like :felhasznalo and jelszo like :jelsz"), array(
+            'felhasznalo' => $username,
+            'jelsz' => $passw,
         ));
         $acces = $result[0]->ossz;
 
         if ($acces != 0){
-            return Redirect::to('importExportQuestions');
+            return Redirect::to('importExportKerdesek');
         }
         else{
             return back()->with('success','Rossz felhasználónév vagy jelszó!');
         }
     }
 
-    public function importUsers(Request $request)
+    public function importTanar(Request $request)
     {
         if($request->hasFile('import_file')){
             $path = $request->file('import_file')->getRealPath();
@@ -48,27 +48,28 @@ class UserController extends Controller
 
             if(!empty($data) && $data->count()){
 
-                foreach ($data->toArray() as $key => $value) {
-                    if(!empty($value)){
-                        foreach ($value as $v) {
-                            $insert[] = ['name' => $v['name'],'username' => $this->generateUsername($this->clean($v['name'])), 'password' => $this->generatePassword($v['name']), 'status' => '1'];
-                        }
+                foreach ($data as $tanarok) {
+                    if(!empty($tanarok)){
+                        $insert[] = ['nev' => $this->doktor($tanarok['nev'],$tanarok['dr']),'felhasznalo' => $this->generateUsername($this->clean($tanarok['nev'])), 'jelszo' => $this->generatePassword($tanarok['nev']),
+                           'tanszek' => $tanarok['tanszek'],'fokozat' => $tanarok['fokozat']];
                     }
+
                 }
 
                 if(!empty($insert)){
-                    User::insert($insert);
+                    Tanar::insert($insert);
                     return back()->with('success',"Sikeres!");
                 }
+
             }
         }
         return back()->with('error','Hiba!');
     }
 
-    public function exportUsers(Request $request)
+    public function exportTanar(Request $request)
     {
-        $data = User::get()->toArray();
-        return Excel::create('users', function($excel) use ($data) {
+        $data = Tanar::get()->toArray();
+        return Excel::create('tanarok', function($excel) use ($data) {
             $excel->sheet('mySheet', function($sheet) use ($data)
             {
                 $sheet->fromArray($data);
@@ -101,12 +102,20 @@ class UserController extends Controller
 
     function splitName(String $name){
         $t = explode(" ", $name);
-        $t2 = $t[1];
         return $t[0];
     }
 
     function clean($string) {
         $string = str_replace('-', '', $string); // Replaces all spaces with hyphens.
         return preg_replace('/[^A-Za-z0-9 ]/', '', $string); // Removes special chars.
+    }
+
+    function doktor(String $name,String $doktor){
+        if (!strcmp ($doktor , "van")){
+            return $name . ', ' . 'Dr.';
+        }
+        else {
+            return $name;
+        }
     }
 }

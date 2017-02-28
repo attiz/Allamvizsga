@@ -10,6 +10,9 @@
             <tr>
                 <th colspan="2" align="left" id={{$kerdes->id}}>{{$kerdes->id . '. ' . $kerdes->kerdes}}</th>
             </tr>
+            <tr>
+                <td><i>{{$kerdes->valasz}}</i></td>
+            </tr>
             @foreach($kivalasztott as $index =>$tantargy)
                 <tr>
                     <td id ={{$tantargy->id}}>{{$tanarok[$index] . ' / ' . $tantargy->nev}}</td>
@@ -29,4 +32,10 @@
     {{Form::close()}}
 
 </body>
+<style>
+    td {
+        width: 600px;
+    }
+</style>
 </html>
+
