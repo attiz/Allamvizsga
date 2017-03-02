@@ -13,5 +13,8 @@ class Valasz extends Model
         'kerdes_id',
         'valasz',
         'tantargy_id',
+        'neptunkod',
+        'szak_id',
+        'megjegyzes',
     ];
 }

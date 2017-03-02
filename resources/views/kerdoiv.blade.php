@@ -28,6 +28,9 @@
         @endforeach
         <p></p>
     </table>
+    <h4>Megjegyzés:</h4>
+    {{Form::textarea('megjegyzes',  null, ['size' => '80x5'])}}
+    <br>
     <button class="btn btn-default">Elküld</button>
     {{Form::close()}}
 

@@ -50,8 +50,7 @@ class TanarController extends Controller
 
                 foreach ($data as $tanarok) {
                     if(!empty($tanarok)){
-                        $insert[] = ['nev' => $this->doktor($tanarok['nev'],$tanarok['dr']),'felhasznalo' => $this->generateUsername($this->clean($tanarok['nev'])), 'jelszo' => $this->generatePassword($tanarok['nev']),
-                           'tanszek' => $tanarok['tanszek'],'fokozat' => $tanarok['fokozat']];
+                        $insert[] = ['nev' => $tanarok['nev'],'felhasznalo' => $this->generateUsername($this->clean($tanarok['nev'])), 'jelszo' => $this->generatePassword($tanarok['nev'])];
                     }
 
                 }

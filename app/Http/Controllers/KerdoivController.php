@@ -70,6 +70,7 @@ class KerdoivController extends Controller
     }
 
     public function kerdoivKitoltes(){
+        session_start();
         echo 'Kérdőív kitöltve!';
         $kerdesek = DB::select( DB::raw("SELECT * FROM kerdesek"));
         $length = sizeof($_POST['tantargyak'])/sizeof($kerdesek);
@@ -85,6 +86,9 @@ class KerdoivController extends Controller
                         $valasz ->kerdes_id = $index;
                         $valasz -> valasz = $selected;
                         $valasz -> tantargy_id = $index2;
+                        $valasz -> neptunkod = $_SESSION['neptunkod'];
+                        $valasz -> szak_id = $_SESSION['szak'];
+                        $valasz -> megjegyzes = $_POST['megjegyzes'];
                         $valasz -> save();
                     }
                 }

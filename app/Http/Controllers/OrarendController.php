@@ -88,25 +88,22 @@ class OrarendController extends Controller
 
                 foreach ($data as $orak) {
                     if (!empty($orak)) {
-                        if ($this->getTanarID($orak['tanar']) == NULL || $this->getTantargyID($orak['tantargy']) == NULL || $this->getSzakID($orak['osztaly']) == NULL){
+                        if ($orak['osztaly'] != NULL) {
+                            $osztaly = $orak['osztaly'];
+                        }
+                        if ($orak['tanar'] != NULL && $orak['tantargy'] != NULL) {
+                            //echo $this->getSzakID($osztaly) . ' ' . var_dump($this->getTanarID(@$orak['tanar'])) . ' ' . var_dump($this->getTantargyID(@$orak['tantargy'])) . '<br>';
+                            $insert[] = ['tanar_id' => $this->getTanarID($orak['tanar']),'tantargy_id' => $this->getTantargyID($orak['tantargy']),
+                            'szak_id' => $this->getSzakID($osztaly)];
+                        }
 
-                            }
-                            else{
-                                $insert[] = ['tanar_id' => $this->getTanarID($orak['tanar']),'tantargy_id' => $this->getTantargyID($orak['tantargy']),
-                                'szak_id' => $this->getSzakID($orak['osztaly'])];
-                            }
                     }
-
                 }
-
-
-                if(!empty($insert)){
-                    Orak::insert($insert);
-                    return back()->with('success',"Sikeres!");
-                }
-
-
             }
+             if(!empty($insert)){
+                Orak::insert($insert);
+                return back()->with('success',"Sikeres!");
+             }
         }
         return back()->with('error','Hiba!');
     }

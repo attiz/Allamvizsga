@@ -17,6 +17,7 @@ class TantargyController extends Controller
     public function generateTantargyak(){
         session_start();
         $szak = $_POST['szakok'];
+        $_SESSION['szak']=$szak;
         $tantargyak = DB::select( DB::raw("select * from tanar_tantargy,tanar,tantargy where tantargy.id = tanar_tantargy.tantargy_id and 
             tanar.id = tanar_tantargy.tanar_id and szak_id  = :szak"),
             array('szak'=> $szak));

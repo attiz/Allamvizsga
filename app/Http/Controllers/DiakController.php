@@ -33,7 +33,12 @@ class DiakController extends Controller
 
         if ($acces == 1){
             $_SESSION['neptunkod'] = $kod;
-            return Redirect::to('selectTantargyak');
+            $res = DB::select( DB::raw("SELECT Count(*) as ossz FROM valaszok WHERE neptunkod = :somevariable"), array(
+                'somevariable' => $kod,
+            ));
+            $kitoltve=$res[0]->ossz;
+            var_dump($kitoltve);
+            return Redirect::to('selectTantargyak') -> with('neptunkod' , $kitoltve);
 
         }
         else{
