@@ -1,9 +1,13 @@
 <html>
-<head></head>
+<head>
+    @if(session_status() == PHP_SESSION_NONE)
+        {{session_start()}}
+    @endif
+</head>
 <body>
     <h3>Kérdőív</h3>
     <p>Kérlek töltsd ki a kérdőívet!</p>
-    {{Form::open(array('url' => 'kerdoivKitoltes', 'method' => 'post'))}}
+    {{Form::open(array('url' => 'kerdoivKitoltes'))}}
     {{ Form::hidden('utolso_kerdoiv',$utolso_kerdoiv)}}
     <table>
         @foreach ($kerdesek as $kerdes)
@@ -15,13 +19,15 @@
             </tr>
             @foreach($kivalasztott as $index =>$tantargy)
                 <tr>
-                    <td id ={{$tantargy->id}}>{{$tanarok[$index] . ' / ' . $tantargy->nev}}</td>
+                    <td id ={{$tantargy->id}}>{{$tanarok[$index] . ' / ' . $tantargy->tantargy}}</td>
                     {{ Form::hidden('tantargyak[]',$tantargy->id)}}
                     <td>
-                        @for ($i = 5; $i  >= 1; $i--)
-                            {{Form::radio('valaszok' . $kerdes->id . $tantargy->id . '[]',$i,null,null)}}
+                        @for($i=5; $i>0;$i--)
+                            {{Form::radio('valaszok' . $kerdes->id . $tantargy->id . '[]',$i,
+                            @\App\Http\Controllers\KerdoivController::isChecked($_SESSION['neptunkod'],$tantargy->id,$kerdes->id) ? 'checked' : null ,
+                           null)}}
                             {{$i}}
-                        @endfor
+                    @endfor
                     </td>
                 </tr>
             @endforeach
@@ -31,7 +37,8 @@
     <h4>Megjegyzés:</h4>
     {{Form::textarea('megjegyzes',  null, ['size' => '80x5'])}}
     <br>
-    <button class="btn btn-default">Elküld</button>
+    <input type="submit" name="mentes" value="Mentés">
+    <input type="submit" name="elkuldes" value="Elküld">
     {{Form::close()}}
 
 </body>

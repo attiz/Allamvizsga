@@ -2,7 +2,6 @@
 <head></head>
 <body>
     <h3>Üdvözlünk, <b>{{$_SESSION['neptunkod']}}</b> ! </h3>
-    @if ($neptunkod = Session::get('neptunkod') == 0)
         @if (isset($szakok))
             <p>Kérlek válaszd ki a csoportodat!</p>
             {{Form::open(array('url' => 'generateTantargyak', 'method' => 'post'))}}
@@ -26,9 +25,6 @@
             <button class="btn btn-default">Választ</button>
             {{Form::close()}}
         @endif
-    @else
-        <h4>Már van kitöltve kérdőív ezzel a neptun kóddal!</h4>
-    @endif
 
 </body>
 </html>

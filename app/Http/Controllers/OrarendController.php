@@ -92,7 +92,6 @@ class OrarendController extends Controller
                             $osztaly = $orak['osztaly'];
                         }
                         if ($orak['tanar'] != NULL && $orak['tantargy'] != NULL) {
-                            //echo $this->getSzakID($osztaly) . ' ' . var_dump($this->getTanarID(@$orak['tanar'])) . ' ' . var_dump($this->getTantargyID(@$orak['tantargy'])) . '<br>';
                             $insert[] = ['tanar_id' => $this->getTanarID($orak['tanar']),'tantargy_id' => $this->getTantargyID($orak['tantargy']),
                             'szak_id' => $this->getSzakID($osztaly)];
                         }
@@ -104,6 +103,7 @@ class OrarendController extends Controller
                 Orak::insert($insert);
                 return back()->with('success',"Sikeres!");
              }
+
         }
         return back()->with('error','Hiba!');
     }

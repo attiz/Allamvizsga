@@ -16,5 +16,6 @@ class Valasz extends Model
         'neptunkod',
         'szak_id',
         'megjegyzes',
+        'vegleges,'
     ];
 }

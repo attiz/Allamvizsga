@@ -42,9 +42,13 @@ Route::get('exportDiak', 'DiakController@exportDiak');
 Route::post('generateKerdoiv','KerdoivController@generateKerdoiv');
 Route::post('kerdoivKitoltes','KerdoivController@kerdoivKitoltes');
 
-Route::get('statisztikaTantargyak','Statisztika@getTantargyak');
+Route::get('statisztikaEgyeni','Statisztika@showView');
+Route::post('statisztikaElonezet','Statisztika@statisztikaElonezet');
+Route::post('statisztikaExport','Statisztika@statisztikaExport');
 
 Route::post('feltoltTantargy', 'OrarendController@feltoltTantargy');
 Route::post('feltoltOsztaly', 'OrarendController@feltoltOsztaly');
 Route::post('feltoltOrak', 'OrarendController@feltoltOrak');
 Route::get('feldolgozOrarend', 'OrarendController@showView');
+
+Route::get('info', 'KerdoivController@kitoltve');

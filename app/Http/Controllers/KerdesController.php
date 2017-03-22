@@ -50,6 +50,8 @@ class KerdesController extends Controller
                 $sheet->fromArray($data);
             });
         })->download();
+
+
     }
 
     public function addKerdes(Request $request){

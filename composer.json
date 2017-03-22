@@ -10,7 +10,8 @@
         "maatwebsite/excel": "~2.1.0",
         "laravelcollective/html": "~5.0",
         "evercode1/view-maker": "^3.5",
-        "fx3costa/laravelchartjs": "^2.2"
+        "fx3costa/laravelchartjs": "^2.2",
+        "twbs/bootstrap": "^3.3"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
