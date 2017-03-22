@@ -60,9 +60,9 @@
                 </tr>
         </table>
         {{Form::open(array('url' => 'statisztikaExport','method' => 'POST'))}}
-        <input type="submit" name="action" value="Export" />
-        {{ Form::hidden('tanar',$tid)}}
-        {{ Form::hidden('szak',$szid)}}
+                <input type="submit" name="action" value="Export" />
+                {{ Form::hidden('tanar',$tid)}}
+                {{ Form::hidden('szak',$szid)}}
         {{Form::close()}}
     @endif
 </body>

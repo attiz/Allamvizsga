@@ -68,16 +68,11 @@ class DiakController extends Controller
                         array_push($tantargyak,$result);
                         array_push($tanarok,$result->nev);
                     }
-                    echo 'id:    kerdes_id:   tantargy_id:   valasz <br><br>';
-                    foreach ($valaszok as $v){
-                        echo var_dump($v->id) . ' ' . var_dump($v->kerdes_id) . ' ' . var_dump($v->tantargy_id) . ' ' . var_dump($v->valasz) . '<br>';
-                    }
-
                      return view('kerdoiv',['kerdesek' => $kerdesek,'kivalasztott' => $tantargyak,'tanarok'=>$tanarok,'utolso_kerdoiv'=>$kerdoiv_id,'valaszok'=>$valaszok]);
 
                 }
-                elseif ($vegleges==1){
-                    return Redirect::to('info');
+                else{
+                    echo 'Ezzel a neptunkoddal már volt kitöltve kérdőív';
                 }
             }
 
@@ -185,14 +180,3 @@ class DiakController extends Controller
     }
 }
 /*
- *  @if(('valaszok' . $valasz->kerdes_id . $valasz->tantargy_id . '[]' ) == ('valaszok' . $kerdes->id . $tantargy->id . '[]' ))
-                                            @if ($valasz->valasz == $i)
-                                                {{Form::radio('valaszok' . $kerdes->id . $tantargy->id . '[]',$i,'checked',null)}}
-                                                {{$i}}
-                                            @endif
-                                        @endif
-                                        @else
-                                        {{Form::radio('valaszok' . $kerdes->id . $tantargy->id . '[]',$i,null,null)}}
-                                        {{$i}}
-                                    @endif
- */
