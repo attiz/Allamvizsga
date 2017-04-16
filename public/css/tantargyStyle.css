@@ -1,0 +1,106 @@
+body
+{
+    background-color: #E6E6E6;
+    font-family: "tahoma,verdana";
+}
+
+#kivalasztSzak
+{
+    width: 50%;
+    margin: 0 auto;
+    padding: 20px;
+    text-align: center;
+}
+
+#kivalasztTantargyak
+{
+    width: 30%;
+    margin: 0 auto;
+    padding: 20px;
+    align-items: center;
+}
+
+.p1
+{
+    loat: left;
+    line-height: 45px;
+    display: inline;
+    font-size: 20px;
+    font-style: inherit;
+    font-family: Comic Sans MS;
+    color: #256E43;
+}
+
+.kivalasztSzak
+{
+    background-color: transparent;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    margin-right: 30px;
+    margin-top: 30px;
+    text-shadow: 0px 1px 3px #666666;
+    -webkit-box-shadow: 6px 5px 11px #666666;
+    -moz-box-shadow: 6px 5px 11px #666666;
+    box-shadow: 6px 5px 11px #666666;
+    font-family: Georgia;
+    color: #256E43;
+    font-size: 19px;
+    padding: 0 2vw;
+}
+
+.kivalasztTantargy
+{
+    background-color: transparent;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    margin-right: 30px;
+    margin-top: 30px;
+    text-shadow: 0px 1px 3px #666666;
+    -webkit-box-shadow: 6px 5px 11px #666666;
+    -moz-box-shadow: 6px 5px 11px #666666;
+    box-shadow: 6px 5px 11px #666666;
+    font-family: Georgia;
+    color: #256E43;
+    font-size: 19px;
+    padding: 0 2vw;
+    float: right;
+}
+
+.szakok
+{
+    -webkit-border-radius: 20px;
+    -moz-border-radius: 20px;
+    border-radius: 20px;
+    background:  transparent no-repeat scroll 319px center;
+    color: #000000;
+    overflow:hidden;
+    width:350px;
+    font-size: 19px;
+    box-shadow: 1px 1px 11px #d3d3d3;
+}
+
+select option
+{
+    background-color:	#E6E6E6;
+    color: #000000;
+    opacity: .7;
+    z-index: -1;
+}
+
+.tantargyak {
+    width: 15px;
+    height: 15px;
+    position: relative;
+    margin: 10px auto;
+    background: #fcfff4;
+    background: linear-gradient(top, #fcfff4 0%, #dfe5d7 40%, #b3bead 100%);
+    border-radius: 50px;
+    box-shadow: inset 0px 1px 1px white, 0px 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+.l1
+{
+    font-family: Georgia, "Times New Roman", Times, serif;
+    font-size: 15px;
+    color: #0f3b16;
+}

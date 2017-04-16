@@ -1,0 +1,151 @@
+@import url(https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,200&subset=latin,latin-ext);
+@import url(https://fonts.googleapis.com/css?family=Lato:400,300,100,700&subset=latin,latin-ext);
+
+*
+{
+	margin : 0px;
+	padding : 0px;
+}
+
+body
+{
+	background-color: #E6E6E6;
+	font-family: "tahoma,verdana";
+}
+#container
+{
+	width: 70%;
+	margin: 0 auto;
+}
+#surveyContainer
+{
+	position: relative;
+	margin: 0 auto;
+}
+
+#kitoltve
+{
+    position: relative;
+    top:0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+.kerdes
+{
+	color: white;
+	background-color: #256E43;
+	padding-top: 50px;
+	padding-bottom: 20px;
+	width: 100%;
+	text-align: center;
+	font-size: 24px;
+	font-weight: bold;
+	box-shadow: 3px 3px 2px #5C5C5C;
+}
+
+.valasz
+{
+	color: #edeeee;
+	background-color: #256E43;
+	width: 100%;
+    padding-bottom: 20px;
+	text-align: center;
+	font-size: 14px;
+    box-shadow: 3px 3px 2px #5C5C5C;
+}
+.tantargy
+{
+    padding: 5px;
+}
+.optionsContainer
+{
+	width: 80%;
+	margin: 0 auto;
+}
+.imgAnsContainer
+{
+	width: 100%;
+	margin: 0 auto;
+}
+.answers
+{
+	overflow: auto;
+	color: #256E43;
+	border: 1px solid #256E43;
+	border-radius: 3px;
+	margin: 10px;
+	padding: 5px 20px;
+	position: relative;
+	display: inline-block;
+	width: 100%;
+	box-shadow: 1px 1px 1px #5C5C5C;
+}
+img
+{
+	height: 40px;
+	vertical-align: top;
+	margin-top: 20px;
+}
+.answers p
+{
+	float: left;
+	line-height: 45px;
+	display: inline;
+	font-size: 18px;
+}
+
+.answers label
+{
+	display: block;
+	text-align: center;
+	margin: 0 0.2em;
+	font-size: 12px;
+}
+
+.answers input[type="radio"]
+{
+	display: block;
+	margin: 0.2em auto;
+}
+
+.radioContainer
+{
+	margin: 10px;
+	padding: 5px 20px;
+	position: relative;
+}
+.radioWrap
+{
+	float: right;
+	display: inline;
+	height: 45px;
+    padding-left: 30px;
+    padding-righ: 30px;
+}
+
+
+.button
+{
+    background-color: transparent;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    margin-right: 30px;
+    margin-top: 30px;
+    text-shadow: 0px 1px 3px #666666;
+    -webkit-box-shadow: 6px 5px 11px #666666;
+    -moz-box-shadow: 6px 5px 11px #666666;
+    box-shadow: 6px 5px 11px #666666;
+    font-family: Georgia;
+    color: #256E43;
+    font-size: 19px;
+    padding: 0 2vw;
+    float: right;
+}
+#buttons
+{
+
+}
+
+

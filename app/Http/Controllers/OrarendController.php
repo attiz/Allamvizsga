@@ -54,7 +54,7 @@ class OrarendController extends Controller
 
             })->get();
 
-           if (!empty($data) && $data->count()) {
+          if (!empty($data) && $data->count()) {
 
                 foreach ($data as $osztalyok) {
                     if (!empty($osztalyok)) {
@@ -67,10 +67,11 @@ class OrarendController extends Controller
                     return back()->with('success',"Sikeres!");
                 }
 
-
             }
         }
-        return back()->with('error','Hiba!');
+       return back()->with('error','Hiba!');
+
+
     }
 
 
@@ -123,6 +124,23 @@ class OrarendController extends Controller
     public function getSzakID(String $szak){
         $id = DB::select(DB::raw("SELECT id FROM szak where szaknev= :nev"), array('nev' => $szak));
         return @$id[0]->id;
+    }
+
+    function splitOsztaly(String $osztaly){
+        $t = explode(" ", $osztaly);
+        return ['nev'=>$t[0],'ev'=>$t[1]];
+    }
+
+    public function updateOrarend(){
+        $szakok = DB::select(DB::raw("SELECT * FROM szak;"));
+        return view('updateOrarend',['szakok'=>$szakok]);
+    }
+
+    public function showOrarend(){
+        $szak_id = $_POST['szakok'];
+        $orarend = DB::select(DB::raw("select t.nev, ta.nev as tantargy, szak_id from tanar_tantargy tt,tanar t,tantargy ta where tt.szak_id = :szak_id and tt.tanar_id = t.id and tt.tantargy_id = ta.id;;"),array('szak_id'=>$szak_id));
+        $szakok = DB::select(DB::raw("SELECT * FROM szak;"));
+        return view('updateOrarend',['szakok'=>$szakok,'orarend'=>$orarend]);
     }
 
 }

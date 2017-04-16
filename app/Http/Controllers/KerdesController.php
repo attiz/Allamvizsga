@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 
 use App\Kerdes;
 use Excel;
+use DB;
 use Illuminate\Support\Facades\Input;
 
 class KerdesController extends Controller
@@ -62,5 +63,10 @@ class KerdesController extends Controller
 
         return back()->with('success','Sikeres hozzaadas!');
 
+    }
+
+    public function updateKerdesek(){
+        $kerdesek = DB::select( DB::raw("SELECT * FROM kerdesek;"));
+        return view('updateKerdes',['kerdesek'=>$kerdesek]);
     }
 }

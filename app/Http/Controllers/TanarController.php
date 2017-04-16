@@ -14,7 +14,8 @@ class TanarController extends Controller
 {
     public function showView()
     {
-        return view('excel.importExportUsers');
+        $tanarok = DB::select( DB::raw("SELECT * FROM tanar;"));
+        return view('excel.importExportUsers',['tanarok'=>$tanarok]);
     }
 
     public function showLogin()
@@ -23,6 +24,8 @@ class TanarController extends Controller
     }
 
     public function loginTanar(){
+        session_start();
+
         $username = Input::get("username");
         $passw = Input::get("passw");
         $result = DB::select( DB::raw("SELECT Count(*) as ossz FROM tanar WHERE felhasznalo like :felhasznalo and jelszo like :jelsz"), array(
@@ -30,9 +33,20 @@ class TanarController extends Controller
             'jelsz' => $passw,
         ));
         $acces = $result[0]->ossz;
-
-        if ($acces != 0){
-            return Redirect::to('importExportKerdesek');
+        $nev = $result = DB::select( DB::raw("SELECT nev FROM tanar WHERE felhasznalo like :felhasznalo"), array(
+            'felhasznalo' => $username,
+        ));
+        $statusz =  $result = DB::select( DB::raw("SELECT statusz FROM tanar WHERE felhasznalo like :felhasznalo"), array(
+            'felhasznalo' => $username,
+        ));
+      
+        if ($acces != 0 && $statusz[0]->statusz == 1){
+            $_SESSION['tanar'] = $nev[0]->nev;
+            return Redirect::to('tanar');
+        }
+        elseif ($acces != 0 && $statusz[0]->statusz == 2){
+            $_SESSION['tanar'] = $nev[0]->nev;
+            return Redirect::to('admin');
         }
         else{
             return back()->with('success','Rossz felhasználónév vagy jelszó!');
@@ -117,4 +131,27 @@ class TanarController extends Controller
             return $name;
         }
     }
+
+    function update(){
+        session_start();
+        return view('adminView');
+    }
+
+    function updateTanar(){
+        return view('updateTanar');
+    }
+
+    function addTanar(){
+        return view('addTanar');
+    }
+
+    function profil(){
+        return view('profil');
+    }
+
+    function tanarView(){
+        session_start();
+        return view('tanar');
+    }
+
 }

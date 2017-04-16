@@ -2,30 +2,15 @@
 
 namespace App;
 
-use Illuminate\Notifications\Notifiable;
-use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Database\Eloquent\Model;
 
-class Tanar extends Authenticatable
+class Tanar extends Model
 {
     protected $table = 'tanar';
-
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
 
 
     protected $fillable = [
         'nev','felhasznalo', 'jelszo','tanszek','fokozat'
     ];
 
-    /**
-     * The attributes that should be hidden for arrays.
-     *
-     * @var array
-     */
-    /*protected $hidden = [
-        'password',
-    ];*/
 }

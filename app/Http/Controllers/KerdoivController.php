@@ -8,12 +8,13 @@ use Input;
 use App\Kerdoiv;
 use App\Valasz;
 use Form;
+use Illuminate\Support\Facades\Redirect;
 
 class KerdoivController extends Controller
 {
 
     public function generateKerdoiv(){
-        session_start();
+       session_start();
         $tantargyak = array();
         $tanarok = array();
         $kerdesek = DB::select( DB::raw("SELECT * FROM kerdesek"));
@@ -27,20 +28,21 @@ class KerdoivController extends Controller
         }
         if( isset($_POST['tantargyak']) && is_array($_POST['tantargyak']) ) {
                 foreach ($_POST['tantargyak'] as $selected) {
-                    $results = DB::select(DB::raw("SELECT id,nev as tantargy FROM tantargy where id= :tantargy_id"), array('tantargy_id' => $selected));
-                    $results2 = DB::select(DB::raw("select tanar_id,nev from tanar_tantargy,tanar where tanar_tantargy.tanar_id = tanar.id and tanar_tantargy.tantargy_id = :tantargy_id and szak_id = :szak_id"),
-                        array('tantargy_id' => $selected,'szak_id' => $_SESSION['szak']));
+                    list($tantargy_id,$tanar_id) = explode('|', $selected);
+
+                    $results = DB::select(DB::raw("SELECT id,nev as tantargy FROM tantargy where id= :tantargy_id"), array('tantargy_id' => (int)$tantargy_id));
+                    $results2 = DB::select(DB::raw("select tanar_id,nev from tanar_tantargy,tanar where tanar_tantargy.tanar_id = tanar.id and tanar_tantargy.tantargy_id = :tantargy_id and tanar_id = :tanar_id"),
+                        array('tantargy_id' => (int)$tantargy_id,'tanar_id' => (int)$tanar_id));
                     array_push($tantargyak, $results[0]);
-                    array_push($tanarok, $results2[0]->nev);
+                    array_push($tanarok, $results2[0]);
                 }
 
         }
-        var_dump($tanarok);
-        $this->insertKerdoiv();
-        return view('kerdoiv',['kerdesek' => $kerdesek,'kivalasztott' => $tantargyak,'tanarok'=>$tanarok,'utolso_kerdoiv'=>$kerdoiv_id]);
+
+        return view('kerdoiv',['kerdesek' => $kerdesek,'tantargyak' => $tantargyak,'tanarok'=>$tanarok,'utolso_kerdoiv'=>$kerdoiv_id]);
     }
 
-    public function insertKerdoiv(){
+    /*public function insertKerdoiv(){
         $tantargyak = array();
         $tanarok = array();
         $kerdesek = DB::select( DB::raw("SELECT * FROM kerdesek"));
@@ -72,14 +74,15 @@ class KerdoivController extends Controller
 
         }
     }
+    */
 
     public function kerdoivKitoltes()
     {
-        if(Input::get('mentes')) {
+        if($_POST['action'] == 'tovabb') {
 
-            $this->kerdoivMentes();
-        } elseif(Input::get('elkuldes')) {
-            $this->kerdoivElkuldes();
+
+        } elseif($_POST['action'] == 'Elküld') {
+            return Redirect::to('kitoltve');
         }
 
     }
@@ -145,7 +148,7 @@ class KerdoivController extends Controller
 
     public function Kitoltve(){
         session_start();
-        return view('info');
+        return view('kitoltve');
     }
 
     public static function isChecked(String $neptunkod,int $tantargy_id,int $kerdes_id){

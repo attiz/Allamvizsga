@@ -30,6 +30,8 @@ class Statisztika extends Controller
     public function statisztikaElonezet(){
         $tanar = $_POST['tanarok'];
         $szak = $_POST['szakok'];
+        $tanarok = DB::select( DB::raw("select * from tanar"));
+        $szakok = DB::select( DB::raw("select * from szak"));
         $valaszok = DB::select( DB::raw("select k.id,k.kerdes,avg(v.valasz) as atlag  from kerdesek k,valaszok v,tantargy t,tanar_tantargy tt 
             where v.tantargy_id = t.id and tt.tantargy_id = t.id and tt.tanar_id= :tanar and v.kerdes_id = k.id and v.szak_id = :szak group by v.kerdes_id"),
             array('tanar'=>$tanar,'szak'=>$szak));
@@ -42,7 +44,7 @@ class Statisztika extends Controller
         if ($hanyan[0]->ossz == 0){
             echo 'Még nincs megjelenítendő eredmény!';
         }else if ($hanyan[0]->ossz != 0) {
-            return view('statisztika',['valaszok'=>$valaszok,'tanar'=>$nev[0]->nev,'atlag'=>$atlag[0]->atlag,'hanyan'=>$hanyan[0]->ossz,'tid'=>$tanar,'szid'=>$szak]);
+            return view('statisztika',['valaszok'=>$valaszok,'tanar'=>$nev[0]->nev,'atlag'=>$atlag[0]->atlag,'hanyan'=>$hanyan[0]->ossz,'tid'=>$tanar,'szid'=>$szak,'tanarok'=>$tanarok,'szakok'=>$szakok]);
         }
     }
 
