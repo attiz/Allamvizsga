@@ -44,33 +44,9 @@ class DiakController extends Controller
                 return Redirect::to('selectTantargyak');
             } elseif ($kitoltve != 0) {
                 if ($vegleges == 0) {
-                    $tantargyak = array();
-                    $tanarok = array();
-                    $kerdesek = DB::select(DB::raw("SELECT * FROM kerdesek"));
-                    $max_id = DB::select(DB::raw("select max(kerdoiv_id) as utolso from kerdoiv"));
-                    $kerdoiv_id = $max_id[0]->utolso;
-                    if ($kerdoiv_id == NULL) {
-                        $kerdoiv_id = 1;
-                    } else {
-                        $kerdoiv_id++;
-                    }
-                    foreach ($kerdesek as $kerdes) {
-                        $results = DB::select(DB::raw("select t.id,t.nev as tantargy,ta.nev from kerdoiv ki,tantargy t,tanar ta where ki.tanar_id = ta.id
-                                                    and ki.tantargy_id = t.id and ki.kerdes_id = :kerdes_id
-                                                     and ki.kerdoiv_id = (select distinct kerdoiv_id from valaszok where neptunkod = :neptunkod);"),
-                            array('kerdes_id' => $kerdes->id, 'neptunkod' => $_SESSION['neptunkod']));
-                    }
-                    $valaszok = DB::select(DB::raw("select t1.id,t2.kerdes_id,t2.tantargy_id,t2.valasz  from kerdesek t1 left join
-                        (select * from valaszok where neptunkod = :neptunkod) t2  on t1.id = t2.kerdes_id;"),
-                        array('neptunkod' => $_SESSION['neptunkod']));
-                    foreach ($results as $result) {
-                        array_push($tantargyak, $result);
-                        array_push($tanarok, $result->nev);
-                    }
-                    return view('kerdoiv', ['kerdesek' => $kerdesek, 'kivalasztott' => $tantargyak, 'tanarok' => $tanarok, 'utolso_kerdoiv' => $kerdoiv_id, 'valaszok' => $valaszok]);
 
                 } else {
-                    echo 'Ezzel a neptunkoddal már volt kitöltve kérdőív';
+                    return Redirect::to('info');
                 }
             }
 
@@ -84,25 +60,18 @@ class DiakController extends Controller
     {
         $student = new diak;
         $student->neptun = Input::get("neptunkod");
-        $student->szak_id = Input::get("szak_id");
         $result = DB::select(DB::raw("SELECT Count(*) as ossz FROM diak WHERE neptun = :somevariable"), array(
             'somevariable' => Input::get("neptunkod"),
         ));
         $acces = $result[0]->ossz;
+
         if ($acces == 1) {
-            return back()->with('error', 'Ez a neptun kod már létezik!');
-        }
-        $result2 = DB::select(DB::raw("SELECT Count(*) as ossz FROM szak WHERE id = :somevariable"), array(
-            'somevariable' => Input::get("szak_id"),
-        ));
-        $letezik = $result2[0]->ossz;
-        if ($letezik == 0) {
-            return back()->with('error', 'Nincsen ilyen szak!');
+            return back()->with('hiba', 'Ez a neptun kod már létezik!');
         }
 
         $student->save();
 
-        return back()->with('success', 'Sikeres hozzaadas!');
+        return back()->with('siker', 'Sikeres hozzáadás!');
     }
 
     public function importDiak(Request $request)

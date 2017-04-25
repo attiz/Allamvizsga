@@ -51,17 +51,49 @@ class KerdesController extends Controller
                 $sheet->fromArray($data);
             });
         })->download();
-
-
     }
 
-    public function addKerdes(Request $request){
-        $question = new kerdes;
-        $question -> kerdes = Input::get("question");
+    public function addKerdes(Request $request)
+    {
+        $kerdes = new kerdes;
+        $kerdes->kerdes = Input::get("kerdes");
+        $kerdes->valasz = Input::get("valasz");
+        $kerdes->save();
+        return back()->with('siker', 'Sikeres hozzáadás!');
+    }
 
-        $question->save();
+    public function addKerdesView(){
+       return view('addKerdes');
+    }
 
-        return back()->with('success','Sikeres hozzaadas!');
+    public function modositKerdes(){
+        session_start();
+        if (isset($_POST['kerdes_id'])) {
+            $adatok = DB::select(DB::raw("SELECT * FROM kerdesek WHERE id = :kerdes_id"), array(
+                'kerdes_id' => $_POST['kerdes_id'],
+            ));
+            $_SESSION['modositKerdesId'] = $_POST['kerdes_id'];
+            return view('modositKerdes', ['adatok' => $adatok]);
+        }
+        else{
+            $adatok = DB::select(DB::raw("SELECT * FROM kerdesek WHERE id = :kerdes_id"), array(
+                'kerdes_id' => $_SESSION['modositKerdesId'],
+            ));
+            return view('modositKerdes', ['adatok' => $adatok]);
+        }
+    }
+
+    function modositKerdesAdatok()
+    {
+        if ($_POST['profilMentes'] == 'ment') {
+            $kerdes = Kerdes::whereid($_POST['kerdes_id'])->firstOrFail();
+            $ker = Input::get("kerdes");
+            $valasz = Input::get("valaszok");
+            $kerdes->kerdes = $ker;
+            $kerdes->valasz = $valasz;
+            $kerdes->save();
+            return back()->with('siker', 'Sikeres mentés!');
+        }
 
     }
 
@@ -69,4 +101,11 @@ class KerdesController extends Controller
         $kerdesek = DB::select( DB::raw("SELECT * FROM kerdesek;"));
         return view('updateKerdes',['kerdesek'=>$kerdesek]);
     }
+
+    function torolKerdes(){
+        Kerdes::where('id', $_POST['kerID'])->delete();
+        return back();
+    }
+
+
 }

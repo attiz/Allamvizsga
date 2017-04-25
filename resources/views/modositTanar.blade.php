@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="hu">
 <head>
-    <title>Profil megtekintése</title>
+    <title>Tanárok modosítása</title>
     <meta charset="utf-8">
     <link href="{{ asset('/css/adminStyle.css') }}" rel="stylesheet">
     <script src="http://code.jquery.com/jquery-1.4.3.min.js"></script>
@@ -22,7 +22,7 @@
 <body>
 <div id="table">
     <div id="top">
-        <h2>Profil megtekintése</h2>
+        <h2>Tanár módosítása</h2>
         @if ($message = Session::get('siker'))
             <div class="alert alert-success" role="alert">
                 {{ Session::get('siker') }}
@@ -35,10 +35,12 @@
         @endif
     </div>
 </div>
+
 <div id="tanarAdatok">
-    <form action="modositProfil" method="post">
+    <form action="modositTanarAdatok" method="post">
         <input type="hidden" name="_token" value="{!! csrf_token() !!}">
         <input type="hidden"  id="profilMentes" value="0" name="profilMentes"/>
+        <input type="hidden"  id="tanar_id" value={{$adatok[0]->id}} name="tanar_id"/>
         <div class="labelDiv">
             <label>Név</label>
             <input type="text" id="nev" name="nev" readonly value="{{$adatok[0]->nev}}"/>

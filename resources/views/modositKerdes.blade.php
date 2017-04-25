@@ -1,17 +1,15 @@
 <!DOCTYPE html>
 <html lang="hu">
 <head>
-    <title>Profil megtekintése</title>
+    <title>Kérdés módosítása</title>
     <meta charset="utf-8">
     <link href="{{ asset('/css/adminStyle.css') }}" rel="stylesheet">
     <script src="http://code.jquery.com/jquery-1.4.3.min.js"></script>
     <script type="text/javascript">
         $(document).ready(function () {
             $('#szerkesztes').click(function () {
-                $("#nev").attr("readonly", false);
-                $("#tanszek").attr("readonly", false);
-                $("#fokozat").attr("readonly", false);
-                $("#email").attr("readonly", false);
+                $("#kerdes").attr("readonly", false);
+                $("#valaszok").attr("readonly", false);
                 $("#profilMentes").attr('value', 'ment');
                 document.getElementById("szerkesztes").style.display = "none";
                 document.getElementById("mentes").style.display = "block";
@@ -22,7 +20,7 @@
 <body>
 <div id="table">
     <div id="top">
-        <h2>Profil megtekintése</h2>
+        <h2>Kérdés módosítása</h2>
         @if ($message = Session::get('siker'))
             <div class="alert alert-success" role="alert">
                 {{ Session::get('siker') }}
@@ -35,25 +33,19 @@
         @endif
     </div>
 </div>
+
 <div id="tanarAdatok">
-    <form action="modositProfil" method="post">
+    <form action="modositKerdesAdatok" method="post">
         <input type="hidden" name="_token" value="{!! csrf_token() !!}">
+        <input type="hidden"  id="kerdes_id" value={{$adatok[0]->id}} name="kerdes_id"/>
         <input type="hidden"  id="profilMentes" value="0" name="profilMentes"/>
         <div class="labelDiv">
-            <label>Név</label>
-            <input type="text" id="nev" name="nev" readonly value="{{$adatok[0]->nev}}"/>
+            <label>Kérdés</label>
+            <input type="text" id="kerdes" name="kerdes" readonly value="{{$adatok[0]->kerdes}}"/>
         </div>
         <div class="labelDiv">
-            <label>Tanszék</label>
-            <input type="text" id="tanszek" name="tanszek" readonly value="{{$adatok[0]->tanszek}}"/>
-        </div>
-        <div class="labelDiv">
-            <label>Fokozat</label>
-            <input type="text" id="fokozat" name="fokozat" readonly value="{{$adatok[0]->fokozat}}"/>
-        </div>
-        <div class="labelDiv">
-            <label>Email</label>
-            <input type="text" id="email" name="email" readonly value="{{$adatok[0]->email}}"/>
+            <label>Válasz lehetőségek</label>
+            <input type="text" id="valaszok" name="valaszok" readonly value="{{$adatok[0]->valasz}}"/>
         </div>
         <input type="button" id="szerkesztes" value="Szerkesztés"></inputbutton>
         <button type="submit" id="mentes" style="display: none">Mentés</button>

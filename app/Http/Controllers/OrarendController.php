@@ -64,12 +64,12 @@ class OrarendController extends Controller
 
                 if(!empty($insert)){
                     Szak::insert($insert);
-                    return back()->with('success',"Sikeres!");
+                    return back()->with('success2',"Sikeres!");
                 }
 
             }
         }
-       return back()->with('error','Hiba!');
+       return back()->with('error2','Hiba!');
 
 
     }
@@ -102,11 +102,11 @@ class OrarendController extends Controller
             }
              if(!empty($insert)){
                 Orak::insert($insert);
-                return back()->with('success',"Sikeres!");
+                return back()->with('success3',"Sikeres!");
              }
 
         }
-        return back()->with('error','Hiba!');
+        return back()->with('error3','Hiba!');
     }
 
 
@@ -141,6 +141,10 @@ class OrarendController extends Controller
         $orarend = DB::select(DB::raw("select t.nev, ta.nev as tantargy, szak_id from tanar_tantargy tt,tanar t,tantargy ta where tt.szak_id = :szak_id and tt.tanar_id = t.id and tt.tantargy_id = ta.id;;"),array('szak_id'=>$szak_id));
         $szakok = DB::select(DB::raw("SELECT * FROM szak;"));
         return view('updateOrarend',['szakok'=>$szakok,'orarend'=>$orarend]);
+    }
+
+    public function addOra(){
+        return view('addOra');
     }
 
 }

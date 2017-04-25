@@ -4,9 +4,74 @@
     <title>Órarend kezelése</title>
     <meta charset="utf-8">
     <link href="{{ asset('/css/adminStyle.css') }}" rel="stylesheet">
+    <script src="http://code.jquery.com/jquery-1.4.3.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#importTantargy').click(function () {
+                document.getElementById("popup").style.display = "block";
+                $('body').addClass('stop-scrolling');
+            });
+            $('#importOsztaly').click(function () {
+                document.getElementById("popup2").style.display = "block";
+                $('body').addClass('stop-scrolling');
+            });
+            $('#importOrak').click(function () {
+                document.getElementById("popup3").style.display = "block";
+                $('body').addClass('stop-scrolling');
+            });
+            $('#megse').click(function () {
+                document.getElementById('popup').style.display = 'none';
+                $('body').removeClass('stop-scrolling');
+            });
+            $('#megse2').click(function () {
+                document.getElementById('popup2').style.display = 'none';
+                $('body').removeClass('stop-scrolling');
+            });
+            $('#megse3').click(function () {
+                document.getElementById('popup3').style.display = 'none';
+                $('body').removeClass('stop-scrolling');
+            });
+        });
+    </script>
 </head>
 <body>
 <div id="orarendView">
+    <div id="popup">
+        <form action="feltoltTantargy" method="post" enctype="multipart/form-data">
+            <input type="hidden" name="_token" value="{{ csrf_token() }}">
+            <p class="popupTitle" >Tantárgyak feltöltése</p>
+            <div class="popupButtonContainer">
+                <input type="file" name="import_tantargy" id="import_tantargy">
+                <button>Feltöltés</button>
+                {{ csrf_field() }}
+                <button type="button" id="megse">Mégse</button>
+            </div>
+        </form>
+    </div>
+    <div id="popup2">
+        <form action="feltoltOsztaly" method="post" enctype="multipart/form-data">
+            <input type="hidden" name="_token" value="{{ csrf_token() }}">
+            <p class="popupTitle">Osztályok feltöltése</p>
+            <div class="popupButtonContainer">
+                <input type="file" name="import_osztaly" id="import_osztaly">
+                <button>Feltöltés</button>
+                {{ csrf_field() }}
+                <button type="button" id="megse2">Mégse</button>
+            </div>
+        </form>
+    </div>
+    <div id="popup3">
+        <form action="feltoltOrak" method="post" enctype="multipart/form-data">
+            <input type="hidden" name="_token" value="{{ csrf_token() }}">
+            <p class="popupTitle">Órák feltöltése</p>
+            <div class="popupButtonContainer">
+                <input type="file" name="import_orak" id="import_orak">
+                <button>Feltöltés</button>
+                {{ csrf_field() }}
+                <button type="button" id="megse3">Mégse</button>
+            </div>
+        </form>
+    </div>
     <form id="orarendUpdate">
         <div class="buttons">
             <table>
@@ -14,24 +79,54 @@
                     <td>
                         <div class="selector">
                             <div id="uploadTantargy">
-                                <button id="1" type="button">Importálás</button>
+                                <button id="importTantargy" type="button">Importálás</button>
                                 <span id="tanarSpan">Tantárgyak feltöltése</span>
+                                @if ($message = Session::get('success'))
+                                    <div class="alert alert-success" role="alert">
+                                        {{ Session::get('success') }}
+                                    </div>
+                                @endif
+                                @if ($message = Session::get('error'))
+                                    <div class="alert alert-danger" role="alert">
+                                        {{ Session::get('error') }}
+                                    </div>
+                                @endif
                             </div>
                         </div>
                     </td>
                     <td>
                         <div class="selector">
                             <div id="uploadOsztályok">
-                                <button id="1" type="button">Importálás</button>
+                                <button id="importOsztaly" type="button">Importálás</button>
                                 <span id="tanarSpan">Osztályok feltöltése</span>
+                                @if ($message = Session::get('success2'))
+                                    <div class="alert alert-success" role="alert">
+                                        {{ Session::get('success2') }}
+                                    </div>
+                                @endif
+                                @if ($message = Session::get('error2'))
+                                    <div class="alert alert-danger" role="alert">
+                                        {{ Session::get('error2') }}
+                                    </div>
+                                @endif
                             </div>
                         </div>
                     </td>
                     <td>
                         <div class="selector">
                             <div id="uploadOrak">
-                                <button id="1" type="button">Importálás</button>
+                                <button id="importOrak" type="button">Importálás</button>
                                 <span id="tanarSpan">Órák feldolgozása</span>
+                                @if ($message = Session::get('success3'))
+                                    <div class="alert alert-success" role="alert">
+                                        {{ Session::get('success3') }}
+                                    </div>
+                                @endif
+                                @if ($message = Session::get('error3'))
+                                    <div class="alert alert-danger" role="alert">
+                                        {{ Session::get('error3') }}
+                                    </div>
+                                @endif
                             </div>
                         </div>
                     </td>
@@ -62,6 +157,7 @@
             </div>
             @foreach($orarend as $ora)
                 <div class="tanar">
+                    <span class="tanGombTorol"><a href="modositKerdes" target="container2" id="modosit">Törlés</a></span>
                     <span class="tanGomb"><a href="addTanar" target="container2" id="modosit">Módosít</a></span>
                     <div style="width: 500px; float: left">
                         <span id="tantargySpan"><b>{{$ora->tantargy}}</b></span>
@@ -72,7 +168,7 @@
                 </div>
             @endforeach
             <div class="fejlec">
-                <span class="tanGomb"><a href="addTanar" target="container2" id="hozzaadas">Új rekord hozzáadása</a></span>
+                <span class="ujTanGomb"><a href="addOra" target="container2" id="hozzaadas">Új rekord hozzáadása</a></span>
             </div>
 
 

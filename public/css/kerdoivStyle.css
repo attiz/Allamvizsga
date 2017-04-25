@@ -148,4 +148,58 @@ img
 
 }
 
+#veglegesit form button {
+	background-color: #256E43;
+	-webkit-border-radius: 10px;
+	-moz-border-radius: 10px;
+	margin: 10px auto 0px auto;
+	text-shadow: 0px 1px 3px #666666;
+	-webkit-box-shadow: 6px 5px 11px #666666;
+	-moz-box-shadow: 6px 5px 11px #666666;
+	box-shadow: 6px 5px 11px #666666;
+	font-family: Georgia;
+	color: white;
+	font-size: 19px;
+	width: 180px;
+	padding: 0 2vw;
+	display: inline-block;
+}
+
+.popupButtonContainer {
+	display: inline-block;
+	margin: 10px auto 0px auto;
+}
+
+.popupTitle {
+	color: #256E43;
+	font-size: 30px;
+	margin: 0px auto 40px auto;
+}
+
+.stop-scrolling {
+	height: 100%;
+	overflow: hidden;
+}
+
+#veglegesit form{
+	margin: calc(50vh - 175px) auto 0 auto;
+	width: 400px;
+	background-color: #E6E6E6;
+	height: 200px;
+	box-sizing: border-box;
+	padding-top: 30px;
+	text-align: center;
+}
+
+#veglegesit {
+	display: none;
+	width: 100vw;
+	height: 100vh;
+	position: absolute;
+	background: rgba(0, 0, 0, .5);
+	top: 0px;
+	left: 0px;
+	z-index: 10;
+}
+
 

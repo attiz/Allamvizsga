@@ -54,20 +54,6 @@ span {
     display: block;
 }
 
-input[type=file] {
-    background-color: transparent;
-    -webkit-border-radius: 10px;
-    -moz-border-radius: 10px;
-    margin-right: 30px;
-    margin-top: 30px;
-    text-shadow: 0px 1px 3px #b8b8b8;
-    font-family: Georgia;
-    color: #ffffff;
-    font-size: 30px;
-    padding: 0 2vw;
-    float: right;
-}
-
 .selector {
     display: inline-block;
     width: 14.9vw;
@@ -125,7 +111,7 @@ input[type=file] {
     margin-bottom: 10px;
 }
 
-#tanarAdatok input, #kerdesAdatok input {
+#tanarAdatok input[type=text], #kerdesAdatok input {
     float: right;
     font-size: 14px;
     margin: 0px;
@@ -188,23 +174,6 @@ li a:hover:not(.active) {
     background-color: #256E43;
 }
 
-.fileUpload {
-    position: relative;
-    margin: 10px;
-}
-
-.fileUpload input.upload {
-    position: absolute;
-    top: 0;
-    right: 0;
-    margin: 0;
-    padding: 0;
-    font-size: 20px;
-    cursor: pointer;
-    opacity: 0;
-    filter: alpha(opacity=0);
-}
-
 .classContainer {
     margin: 20px auto;
     width: 90vw;
@@ -225,6 +194,14 @@ li a:hover:not(.active) {
     padding-right: 35px;
 }
 
+.fejlecBalTanar {
+    line-height: 35px;
+    margin: 0 3vw;
+    color: white;
+    padding-left: 55px;
+    padding-right: 55px;
+}
+
 .osszesites {
     width: 90%;
     margin: 10px auto;
@@ -237,9 +214,23 @@ li a:hover:not(.active) {
 }
 
 .tanar {
+    font-size: 14px;
     border: 1px solid #7DAB93;
     width: 90%;
     margin: 2px auto;
+    padding: 1px;
+    min-height: 20px;
+    -webkit-border-radius: 2px;
+    border-radius: 2px;
+    color: #7DAB93;
+    font-weight: 300;
+}
+
+.kerdesDiv {
+    border: 1px solid #7DAB93;
+    width: 90%;
+    margin: 2px auto;
+    padding: 1px;
     min-height: 20px;
     -webkit-border-radius: 2px;
     border-radius: 2px;
@@ -251,30 +242,50 @@ li a:hover:not(.active) {
     line-height: 20px;
     margin: 0 3vw;
     display: inline-block;
-    width: 70%;
+    width: 300px;
     color: #000000;
 }
 
+.kerdesSpan {
+    line-height: 10px;
+    margin: 0 3vw;
+    display: inline-block;
+    width: 70%;
+    color: #000000;
+}
+.tanszek {
+    line-height: 20px;
+    margin: 0 3vw;
+    display: inline-block;
+    width: 500px;
+    color: #000000;
+    padding: 1px;
+}
+
 .tanGomb {
+    line-height: 5px;
+    display: inline-block;
+    float: right;
+    margin: 0 1vw;
+    padding: 1px;
+}
+
+.tanGombTorol {
+    line-height: 20px;
+    display: inline-block;
+    float: right;
+    margin: 0 2vw;
+    padding-right: 2px;
+}
+
+.ujTanGomb {
     line-height: 20px;
     display: inline-block;
     float: right;
     margin: 0 3vw;
-    padding: 1px;
+    padding-top: 7px;
 }
 
-#modosit:link, #modosit:visited {
-    background-color: transparent;
-    color: #256E43;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-}
-
-#modosit:hover, #modosit:active {
-    background-color: #256E43;
-    color: white;
-}
 
 #hozzaadas:link, #hozzaadas:visited {
     background-color: #256E43;
@@ -289,20 +300,20 @@ li a:hover:not(.active) {
     color: black;
 }
 
-#table{
-    width:100%;
-    display:table;
+#table {
+    width: 100%;
+    display: table;
 }
 
 #top {
     display: table-cell;
     position: relative;
-    width:100%;
+    width: 100%;
     height: 100px;
-    vertical-align:middle;
+    vertical-align: middle;
 }
 
-#top h2{
+#top h2 {
     text-align: center;
     color: #256E43;
 }
@@ -334,15 +345,15 @@ select option {
     z-index: -1;
 }
 
-#div1{
+#div1 {
     color: white;
     background-color: #256E43;
-    padding-bottom: 15px ;
+    padding-bottom: 15px;
     width: 100%;
     text-align: center;
 }
 
-#orarend{
+#orarend {
     background-color: transparent;
     -webkit-border-radius: 10px;
     -moz-border-radius: 10px;
@@ -356,19 +367,19 @@ select option {
     padding: 0 2vw;
 }
 
-#tantargySpan{
+#tantargySpan {
     line-height: 35px;
     color: black;
     margin: 0 3vw;
 }
 
-#tanar{
+#tanar {
     line-height: 35px;
     margin: 0 3vw;
     color: black;
 }
 
-.fejlecBalOrarend{
+.fejlecBalOrarend {
     line-height: 35px;
     margin: 0 3vw;
     color: white;
@@ -376,9 +387,241 @@ select option {
     padding-right: 35px;
 }
 
+#popup, #popup2, #popup3,#popupMessage,#popupJelszo, #veglegesit,#popupTorol {
+    display: none;
+    width: 100vw;
+    height: 100vh;
+    position: absolute;
+    background: rgba(0, 0, 0, .5);
+    top: 0px;
+    left: 0px;
+    z-index: 10;
+}
 
+#popup form, #popup2 form, #popup3 form {
+    margin: calc(50vh - 175px) auto 0 auto;
+    width: 360px;
+    background-color: #E6E6E6;
+    height: 250px;
+    box-sizing: border-box;
+    padding-top: 30px;
+    text-align: center;
+}
 
+#popupJelszo form{
+    margin: calc(50vh - 175px) auto 0 auto;
+    width: 500px;
+    background-color: #E6E6E6;
+    height: 500px;
+    box-sizing: border-box;
+    padding-top: 30px;
+    text-align: center;
+}
 
+#veglegesit form{
+    margin: calc(50vh - 175px) auto 0 auto;
+    width: 300px;
+    background-color: #E6E6E6;
+    height: 200px;
+    box-sizing: border-box;
+    padding-top: 30px;
+    text-align: center;
+}
+
+#popupMessage form{
+    margin: calc(50vh - 175px) auto 0 auto;
+    width: 200px;
+    background-color: #E6E6E6;
+    height: 200px;
+    box-sizing: border-box;
+    padding-top: 30px;
+    text-align: center;
+}
+
+#torles{
+    margin: calc(50vh - 175px) auto 0 auto;
+    width: 300px;
+    background-color: #E6E6E6;
+    height: 180px;
+    box-sizing: border-box;
+    padding-top: 30px;
+    text-align: center;
+}
+
+#popup form input, #popup2 form input, #popup3 form input, #popupJelszo form input {
+    width: 200px;
+    height: 25px;
+    border: 0;
+    margin: 10px auto 45px auto;
+    display: block;
+}
+
+#popup form button, #popup2 form button, #popup3 form button, #popupJelszo form button, #popupMessage form button, #veglegesit form button{
+    background-color: #256E43;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    margin: 10px auto 0px auto;
+    text-shadow: 0px 1px 3px #666666;
+    -webkit-box-shadow: 6px 5px 11px #666666;
+    -moz-box-shadow: 6px 5px 11px #666666;
+    box-shadow: 6px 5px 11px #666666;
+    font-family: Georgia;
+    color: white;
+    font-size: 19px;
+    padding: 0 2vw;
+    display: inline-block;
+}
+
+#popupTorol button{
+    background-color: #256E43;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    margin: 10px auto 0px auto;
+    text-shadow: 0px 1px 3px #666666;
+    -webkit-box-shadow: 6px 5px 11px #666666;
+    -moz-box-shadow: 6px 5px 11px #666666;
+    box-shadow: 6px 5px 11px #666666;
+    font-family: Georgia;
+    color: white;
+    font-size: 19px;
+    padding: 0 2vw;
+    display: inline-block;
+}
+
+#popup form textarea, #popup2 form textarea, #popup3 form textarea, #popupJelszo form textarea {
+    height: 100px;
+    width: 200px;
+}
+
+.popupButtonContainer {
+    display: inline-block;
+    margin: 10px auto 0px auto;
+}
+
+.popupTitle {
+    color: #256E43;
+    font-size: 30px;
+    margin: 0px auto 40px auto;
+}
+
+.stop-scrolling {
+    height: 100%;
+    overflow: hidden;
+}
+
+li.dropdown {
+    display: inline-block;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #E6E6E6;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+}
+
+.dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    text-align: left;
+}
+
+.dropdown-content a:hover {
+    background-color: #f1f1f1
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+#popupJelszo input{
+    font-size: 14px;
+    margin: 0px;
+    border-color: #256E43;
+    border-width: 10px;
+    background: #f0f0f0;
+    color: #256E43;
+}
+
+.alert-danger,.alert-success{
+    font-size: 20px;
+    color: white;
+}
+
+#exportTanar a,#importDiakok a,#kerdesek a {
+    color: #FFFFFF;
+    text-decoration: none;
+}
+
+#top .alert-success, #top .alert-danger{
+    text-align: center;
+    color: #256E43
+}
+
+#tanarAdatok #szerkesztes, #tanarAdatok #mentes{
+    background-color: transparent;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    margin: 10px auto 0px auto;
+    text-shadow: 0px 1px 3px #666666;
+    -webkit-box-shadow: 6px 5px 11px #666666;
+    -moz-box-shadow: 6px 5px 11px #666666;
+    box-shadow: 6px 5px 11px #666666;
+    font-family: Georgia;
+    color: #256E43;
+    font-size: 19px;
+    padding: 0 2vw;
+    display: block;
+    width: 180px;
+}
+
+#modositTanar, .torolTanar {
+    border-radius: 3px;
+    background-color: transparent;
+    border: none;
+    color: #256E43;
+    text-align: center;
+    font-size: 13px;
+    font-weight: bold;
+    padding-bottom: 1px;
+    width: 90px;
+    transition: all 0.5s;
+    cursor: pointer;
+    margin: 2px;
+}
+
+#modositTanar span, .torolTanar span {
+    cursor: pointer;
+    display: inline-block;
+    position: relative;
+    transition: 0.5s;
+}
+
+#modositTanar span:after, .torolTanar span:after {
+    content: '\00bb';
+    position: absolute;
+    opacity: 0;
+    top: 0;
+    right: -5px;
+    transition: 0.5s;
+}
+
+#modositTanar:hover span, .torolTanar:hover span {
+    padding-right: 20px;
+}
+
+#modositTanar:hover span:after , .torolTanar:hover span:after {
+    opacity: 1;
+    right: 0;
+}
+
+.modositGombok{
+    float:right;
+}
 
 
 

@@ -6,5 +6,7 @@
 <body>
 <div id="container">
     <div id="kitoltve">
-        <div class="kerdes">Üdvözöljük,<b>{{$_SESSION['neptunkod']}}</b>! Ezzel a neptunkóddal már volt kitöltve kérdőív!</div>
+        <div class="kerdes">Kérdőív mentve!</div>
+    </div>
+</div>
 </body>

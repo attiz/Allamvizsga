@@ -3,11 +3,21 @@
 <head>
     <title>Tanárértékelő</title>
     <meta charset="utf-8">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <link href="{{ asset('/css/kerdoivStyle.css') }}" rel="stylesheet">
     <script src="http://code.jquery.com/jquery-1.4.3.min.js"></script>
+    <script type="text/javascript">
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+    </script>
     <script>
         $(document).ready(function () {
+            valaszok = [];
             $('#tovabb').click(function () {
+                $('html, body').animate({ scrollTop: 0 }, 'fast');
                 var index = $('#kerdes_id').val();
                 console.log('kerdes: ' + index);
                 var neptunkod = $('#neptunkod').val();
@@ -18,7 +28,7 @@
                 var decoded2 = array2.replace(/&quot;/g, '"');
                 var kerdesek = JSON.parse(decoded);
                 var tantargyak = JSON.parse(decoded2);
-                if (index > kerdesek.length - 1) {
+                if (index >= kerdesek.length - 1) {
                     document.getElementById("tovabb").style.display = "none";
                     document.getElementById("megjegyzes").style.display = "block";
                 }
@@ -26,14 +36,14 @@
                 document.getElementById("valasz").innerHTML = kerdesek[index].valasz;
                 index++;
                 $('#kerdes_id').val(index);
-                valaszok = [];
                 tantargyak.forEach(function (tantargy) {
                     var pont = $("input[name=valaszok" + tantargy.id + "[]]:checked").val();
+                    if (pont == null){
+                        pont = 0;
+                    }
                     var tanar = $('#' + tantargy.id + '').val();
-                    console.log('tantargy:' + tantargy.id);
-                    console.log('tanar: ' + tanar);
-                    console.log('valasz: ' + pont);
                     var element = {};
+                    element.utolso_kerdoiv = $('#utolso_kerdoiv').val();
                     element.kerdes_id = index - 1;
                     element.tantargy_id = tantargy.id;
                     element.tanar_id = tanar;
@@ -44,10 +54,48 @@
                     $('input[name=valaszok' + tantargy.id + '[]]').attr('checked', false);
                 });
                 console.log(valaszok);
-
-
             });
             $('#elkuld').click(function () {
+                $('html, body').animate({ scrollTop: 0 }, 'fast');
+                document.getElementById("veglegesit").style.display = "block";
+                $('body').addClass('stop-scrolling');
+            });
+            $('#ment').click(function () {
+                document.getElementById('veglegesit').style.display = 'none';
+                $('body').removeClass('stop-scrolling');
+                var jsonString = JSON.stringify(valaszok);
+                var element = {};
+                element.vegleges = 0;
+                valaszok.push(element);
+                console.log(jsonString);
+                $.ajax({
+                    type: "POST",
+                    url: "kerdoivElkuldes",
+                    data: {valaszok: valaszok},
+                    dataType: "json",
+                    success: function(msg) {
+                        //window.alert(JSON.stringify(msg));
+                    }
+                });
+                window.location.replace('mentve');
+            });
+            $('#veg').click(function () {
+                document.getElementById('veglegesit').style.display = 'none';
+                $('body').removeClass('stop-scrolling');
+                var jsonString = JSON.stringify(valaszok);
+                var element = {};
+                element.vegleges = 1;
+                valaszok.push(element);
+                console.log(jsonString);
+                $.ajax({
+                    type: "POST",
+                    url: "kerdoivElkuldes",
+                    data: {valaszok: valaszok},
+                    dataType: "json",
+                    success: function(msg) {
+                       // window.alert(JSON.stringify(msg));
+                    }
+                });
                 window.location.replace('kitoltve');
             });
 
@@ -57,10 +105,19 @@
 
 <body>
 <div id="container">
+    <div id="veglegesit">
+        <form>
+            <p class="popupTitle">Biztos benne?</p>
+            <div class="popupButtonContainer">
+                <button type="button" id="ment">Mentés</button>
+                <button type="button" id="veg">Véglegesítés</button>
+            </div>
+        </form>
+    </div>
     <div id="surveyContainer">
-        {{--{{Form::open(array('url' => 'kerdoivKitoltes','method'=>'post'))}}--}}
         {{ Form::hidden('utolso_kerdoiv',$utolso_kerdoiv)}}
         <input type="hidden" id="kerdes_id" value=1>
+        <input type="hidden" id="utolso_kerdoiv" value={{$utolso_kerdoiv}}>
         <input type="hidden" id="neptunkod" value={{$_SESSION['neptunkod']}}>
         <input type="hidden" id="szak_id" value={{$_SESSION['szak']}}>
         <div class="kerdes" name="kerdes" id="kerdes">{{$kerdesek[0]->kerdes}}</div>
@@ -70,12 +127,12 @@
                 <div class="answers">
                     <p class="tantargy">{{$tanarok[$index]->nev}} - {{$tantargy->tantargy}}</p>
                     <div class="radioContainer">
+                        <input type="hidden" id={{$tantargy->id}} value={{$tanarok[$index]->tanar_id}}>
                         @for($i=1;$i<=5;$i++)
                             <div class="radioWrap">
                                 <input type="radio"
                                        value={{$i}} name={{'valaszok' . $tantargy->id . '[]'}} id={{'valaszok' . $tantargy->id . '[]'}}>
                                 <label>{{$i}}</label>
-                                <input type="hidden" id={{$tantargy->id}} value={{$tanarok[$index]->tanar_id}}>
                             </div>
                         @endfor
                     </div>
@@ -84,14 +141,13 @@
         </div>
 
         <div style="padding-left: 150px; display: none" id="megjegyzes">
-    <textarea id="megjegyzesArea" style="width: 90%;;height: 100px;color: transparent; padding: 0 5px; resize: none;"
+    <textarea id="megjegyzesArea" style="width: 90%;height: 100px;color: transparent; padding: 0 5px; resize: none; "
               placeholder="Írd be a megjegyzésed"></textarea>
         </div>
     </div>
     <div id="buttons">
         <input type="submit" name="action" value="Tovább" class="button" id="tovabb"/>
         <input type="submit" name="action" value="Elküld" class="button" id="elkuld"/>
-{{--       {{Form::close()}}--}}
     </div>
     <div style="padding: 40px">
     </div>
