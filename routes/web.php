@@ -57,8 +57,10 @@ Route::get('importExportDiakok', 'DiakController@showView');
 Route::post('addDiak', 'DiakController@addDiak');
 Route::post('importDiak', 'DiakController@importDiak');
 Route::get('exportDiak', 'DiakController@exportDiak');
+Route::get('logoutDiak', 'DiakController@logoutDiak');
 
 Route::post('generateKerdoiv','KerdoivController@generateKerdoiv');
+Route::get('betoltKerdoiv','KerdoivController@betoltKerdoiv');
 Route::post('kerdoivKitoltes','KerdoivController@kerdoivKitoltes');
 Route::post('kerdoivElkuldes', 'KerdoivController@kerdoivElkuldes');
 
@@ -73,6 +75,8 @@ Route::get('feldolgozOrarend', 'OrarendController@showView');
 Route::get('updateOrarend', 'OrarendController@updateOrarend');
 Route::post('showOrarend', 'OrarendController@showOrarend');
 Route::get('addOra', 'OrarendController@addOra');
+Route::post('modositTantargy', 'TantargyController@modositTantargy');
+Route::post('modositTantargyAdatok', 'TantargyController@modositTantargyAdatok');
 
 Route::get('kitoltve', 'KerdoivController@kitoltve');
 Route::get('mentve', 'KerdoivController@mentve');

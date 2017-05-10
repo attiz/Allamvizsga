@@ -245,6 +245,13 @@ li a:hover:not(.active) {
     width: 300px;
     color: #000000;
 }
+.tanOrarend {
+    line-height: 20px;
+    margin: 0 3vw;
+    display: inline-block;
+    width: 350px;
+    color: #000000;
+}
 
 .kerdesSpan {
     line-height: 10px;

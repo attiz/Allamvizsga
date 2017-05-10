@@ -10,7 +10,11 @@ class Tanar extends Model
 
 
     protected $fillable = [
-        'nev','felhasznalo', 'jelszo','tanszek','fokozat'
+        'nev','felhasznalo','tanszek','fokozat'
     ];
+
+    protected $hidden = [
+        'jelszo',
+        ];
 
 }

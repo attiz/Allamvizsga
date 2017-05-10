@@ -157,13 +157,22 @@
             </div>
             @foreach($orarend as $ora)
                 <div class="tanar">
-                    <span class="tanGombTorol"><a href="modositKerdes" target="container2" id="modosit">Törlés</a></span>
-                    <span class="tanGomb"><a href="addTanar" target="container2" id="modosit">Módosít</a></span>
+                    <button class="torolTanar" style="float: right;"><span>Töröl</span>
+                    </button>
+                    <form action="modositTantargy" method="post">
+                        <input type="hidden" name="_token" value="{{ csrf_token()}}">
+                        <span class="tanGomb">
+                    <div class="modositGombok">
+                        <input type="hidden" name="ora_id" value={{ $ora->id }}>
+                        <button id="modositTanar"><span>Módosít</span></button>
+                         </div>
+                    </span>
+                    </form>
                     <div style="width: 500px; float: left">
-                        <span id="tantargySpan"><b>{{$ora->tantargy}}</b></span>
+                        <span class="tanOrarend"><b>{{$ora->tantargy}}</b></span>
                     </div>
                     <div>
-                        <span id="tanar"><b>{{$ora->nev}}</b></span>
+                        <span class="tan"><b>{{$ora->nev}}</b></span>
                     </div>
                 </div>
             @endforeach

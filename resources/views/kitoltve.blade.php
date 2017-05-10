@@ -7,4 +7,11 @@
 <div id="container">
     <div id="kitoltve">
         <div class="kerdes">Köszönjük,<b>{{$_SESSION['neptunkod']}}</b>! A kérdőív sikeresen kitöltve!</div>
+    </div>
+    <div class="kij">
+        <form action="logoutDiak" method="get">
+            <button id="logoutButton">Kijelentkezés</button>
+        </form>
+    </div>
+</div>
 </body>

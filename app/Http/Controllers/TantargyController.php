@@ -43,6 +43,24 @@ class TantargyController extends Controller
             tanar.id = tanar_tantargy.tanar_id and tantargy_id = :id;"),array('id'=>$tantargy_id));
 
             return $tantargyOsszes;
+    }
 
+    function modositTantargy()
+    {
+        session_start();
+        if (isset($_POST['ora_id'])) {
+            $adatok = DB::select(DB::raw("select tanar.nev as tanar,tantargy.nev,tanar_tantargy.id as id from tanar_tantargy,tanar,tantargy where tantargy.id = tanar_tantargy.tantargy_id and
+            tanar.id = tanar_tantargy.tanar_id and tanar_tantargy.id = :id;"), array(
+                'id' => $_POST['ora_id']
+            ));
+            $_SESSION['modositOraId'] = $_POST['ora_id'];
+            return view('modositTantargy', ['adatok' => $adatok]);
+        } else {
+            $adatok = DB::select(DB::raw("select tanar.nev as tanar,tantargy.nev,tanar_tantargy.id as id from tanar_tantargy,tanar,tantargy where tantargy.id = tanar_tantargy.tantargy_id and
+            tanar.id = tanar_tantargy.tanar_id and tanar_tantargy.id = :id;"), array(
+                'id' => $_SESSION['modositOraId']
+            ));
+            return view('modositTantargy', ['adatok' => $adatok]);
+        }
     }
 }

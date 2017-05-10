@@ -111,7 +111,8 @@ class OrarendController extends Controller
 
 
     public function getTanarID(String $nev){
-        $id = DB::select(DB::raw("SELECT id FROM tanar where nev= :nev"), array('nev' => $nev));
+        $tanarNev = $this->doktorLevagas($nev);
+        $id = DB::select(DB::raw("SELECT id FROM tanar where nev= :nev"), array('nev' => $tanarNev));
         return @$id[0]->id;
     }
 
@@ -138,13 +139,20 @@ class OrarendController extends Controller
 
     public function showOrarend(){
         $szak_id = $_POST['szakok'];
-        $orarend = DB::select(DB::raw("select t.nev, ta.nev as tantargy, szak_id from tanar_tantargy tt,tanar t,tantargy ta where tt.szak_id = :szak_id and tt.tanar_id = t.id and tt.tantargy_id = ta.id;;"),array('szak_id'=>$szak_id));
+        $orarend = DB::select(DB::raw("select tt.id as id,t.nev, ta.nev as tantargy, szak_id from tanar_tantargy tt,tanar t,tantargy ta where tt.szak_id = :szak_id and tt.tanar_id = t.id and tt.tantargy_id = ta.id;;"),array('szak_id'=>$szak_id));
         $szakok = DB::select(DB::raw("SELECT * FROM szak;"));
         return view('updateOrarend',['szakok'=>$szakok,'orarend'=>$orarend]);
     }
 
     public function addOra(){
         return view('addOra');
+    }
+
+    function doktorLevagas(string $nev)
+    {
+        $arr = explode(",", $nev, 2);
+        $first = $arr[0];
+        return $first;
     }
 
 }

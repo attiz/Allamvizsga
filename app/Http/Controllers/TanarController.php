@@ -126,6 +126,10 @@ class TanarController extends Controller
         return back()->with('error', 'Hiba!');
     }
 
+    public function addTanarView(){
+        return view('addTanar');
+    }
+
     public function addTanar(Request $request)
     {
         $tanar = new tanar;

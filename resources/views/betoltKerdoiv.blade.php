@@ -19,7 +19,6 @@
             $('#tovabb').click(function () {
                 $('html, body').animate({scrollTop: 0}, 'fast');
                 var index = $('#kerdes_id').val();
-                console.log('kerdes: ' + index);
                 var neptunkod = $('#neptunkod').val();
                 var szak_id = $('#szak_id').val();
                 var array = "{{ json_encode($kerdesek,JSON_UNESCAPED_UNICODE ) }}";
@@ -52,6 +51,7 @@
                     element.szak_id = szak_id;
                     valaszok.push(element);
                     $('input[name=valaszok' + tantargy.id + '[]]').attr('checked', false);
+                    console.log(valaszok);
                 });
             });
             $('#elkuld').click(function () {
@@ -121,17 +121,16 @@
         </form>
     </div>
     <div id="surveyContainer">
-        {{ Form::hidden('utolso_kerdoiv',$utolso_kerdoiv)}}
         <input type="hidden" id="kerdes_id" value=1>
-        <input type="hidden" id="utolso_kerdoiv" value={{$utolso_kerdoiv}}>
+        <input type="hidden" id="utolso_kerdoiv" value={{$kerdoiv_id}}>
+        <input type="hidden" id="szak_id" value={{$tantargyak[0]->szak_id}}>
         <input type="hidden" id="neptunkod" value={{$_SESSION['neptunkod']}}>
-        <input type="hidden" id="szak_id" value={{$_SESSION['szak']}}>
         <div class="kerdes" name="kerdes" id="kerdes">{{$kerdesek[0]->kerdes}}</div>
         <div class="valasz" id="valasz">{{$kerdesek[0]->valasz}}</div>
         <div class="optionsContainer">
             @foreach($tantargyak as $index =>$tantargy)
                 <div class="answers">
-                    <p class="tantargy">{{$tanarok[$index]->nev}} - {{$tantargy->tantargy}}</p>
+                    <p class="tantargy">{{$tanarok[$index]->nev}} - {{$tantargy->nev}}</p>
                     <div class="radioContainer">
                         <input type="hidden" id={{$tantargy->id}} value={{$tanarok[$index]->tanar_id}}>
                         @for($i=1;$i<=5;$i++)

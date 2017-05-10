@@ -44,7 +44,7 @@ class DiakController extends Controller
                 return Redirect::to('selectTantargyak');
             } elseif ($kitoltve != 0) {
                 if ($vegleges == 0) {
-
+                    return Redirect::to('betoltKerdoiv');
                 } else {
                     return Redirect::to('info');
                 }
@@ -111,28 +111,6 @@ class DiakController extends Controller
         })->download();
     }
 
-    public function betoltKerdoiv()
-    {
-        $tantargyak = array();
-        $tanarok = array();
-        $valaszok = array();
-        $kerdesek = DB::select(DB::raw("SELECT * FROM kerdesek"));
-        $max_id = DB::select(DB::raw("select max(kerdoiv_id) as utolso from kerdoiv"));
-        $kerdoiv_id = $max_id[0]->utolso;
-        if ($kerdoiv_id == NULL) {
-            $kerdoiv_id = 1;
-        } else {
-            $kerdoiv_id++;
-        }
-        $results = DB::select(DB::raw("select v.kerdes_id,v.tantargy_id,v.valasz,t.nev,v.szak_id  from valaszok v,tantargy t where t.id=v.tantargy_id and  v.neptunkod = :neptunkod"),
-            array('neptunkod' => $_SESSION['neptunkod']));
-        foreach ($results as $result) {
-            array_push($tantargyak, $result->nev);
-            array_push($tanarok, $this->getTanarNev($result->tantargy_id, $result->szak_id));
-        }
-        return view('kerdoiv', ['kerdesek' => $kerdesek, 'kivalasztott' => $tantargyak, 'tanarok' => $tanarok, 'utolso_kerdoiv' => $kerdoiv_id]);
-    }
-
     public function getTanarNev(int $tantargy, int $szak)
     {
         $res = DB::select(DB::raw("select t.nev from tanar t ,tanar_tantargy tt where tt.tanar_id = t.id and tt.tantargy_id = :tantargy and tt.szak_id = :szak; "),
@@ -148,5 +126,13 @@ class DiakController extends Controller
             array('neptunkod' => $neptunkod));
         return $results;
     }
+
+    function logoutDiak()
+    {
+        session_start();
+        unset($_SESSION['neptunkod']);
+        session_destroy();
+        return Redirect::to('loginDiak');
+    }
 }
-/*
+

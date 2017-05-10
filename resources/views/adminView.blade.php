@@ -37,7 +37,7 @@
             <li style="padding-left: 30px"><a href="importExportTanar" target="container2">Tanárok kezelése</a></li>
             <li><a href="importExportDiakok" target="container2">Diákok kezelése</a></li>
             <li><a href="updateKerdes" target="container2">Kérdések kezelése</a></li>
-            <li><a href="updateOrarend" target="container2">Órarend kezelése</a></li>
+            <li><a href="updateOrarend" target="container2">Tantárgyak kezelése</a></li>
             <li><a href="statisztikaEgyeni" target="container2">Statisztika</a></li>
             <li class="dropdown" style="padding-right: 30px; float: right">
                 <a href="javascript:void(0)" class="dropbtn">Üdvözöljük,<b>{{$_SESSION['tanar']}}</b>!</a>
