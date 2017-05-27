@@ -7,9 +7,11 @@ use DB;
 use Input;
 use App\Kerdoiv;
 use App\Valasz;
+use App\MentettValaszok;
 use App\Megjegyzes;
 use Form;
 use Illuminate\Support\Facades\Redirect;
+
 
 class KerdoivController extends Controller
 {
@@ -19,7 +21,7 @@ class KerdoivController extends Controller
         session_start();
         $tantargyak = array();
         $tanarok = array();
-        $kerdesek = DB::select(DB::raw("SELECT * FROM kerdesek"));
+        $kerdesek = DB::select(DB::raw("SELECT * FROM kerdesek where aktiv = 1"));
         $max_id = DB::select(DB::raw("select max(kerdoiv_id) as utolso from kerdoiv"));
         $kerdoiv_id = $max_id[0]->utolso;
         if ($kerdoiv_id == NULL) {
@@ -47,11 +49,11 @@ class KerdoivController extends Controller
 
     public function betoltKerdoiv(){
         session_start();
-        $kerdesek = DB::select(DB::raw("SELECT * FROM kerdesek"));
+        $kerdesek = DB::select(DB::raw("SELECT * FROM kerdesek where aktiv=1"));
         $tanarok = array();
-        $kerdoiv = DB::select(DB::raw("select kerdoiv_id from valaszok where neptunkod =:neptunkod"), array('neptunkod'=>$_SESSION['neptunkod']));
+        $kerdoiv = DB::select(DB::raw("select kerdoiv_id from mentes where neptunkod =:neptunkod"), array('neptunkod'=>$_SESSION['neptunkod']));
         $kerdoiv_id = $kerdoiv[0]->kerdoiv_id;
-        $tantargyak = DB::select(DB::raw("select  distinct v.tantargy_id as id,t.nev,v.szak_id from valaszok v,tantargy t where t.id=v.tantargy_id and  v.neptunkod = :neptun"),
+        $tantargyak = DB::select(DB::raw("select distinct v.tantargy_id as id,t.nev,v.szak_id from mentes v,tantargy t where t.id=v.tantargy_id and  v.neptunkod = :neptun"),
             array('neptun'=>$_SESSION['neptunkod']));
 
         foreach ($tantargyak as $t) {
@@ -59,41 +61,21 @@ class KerdoivController extends Controller
                 array('tantargy_id' => (int)$t->id, 'szak'=>$t->szak_id));
             array_push($tanarok,$result[0]);
         }
-        return view('betoltKerdoiv', ['kerdesek' => $kerdesek,'kerdoiv_id'=>$kerdoiv_id,'tantargyak'=>$tantargyak,'tanarok'=>$tanarok]);
-    }
 
-    /*public function betoltKerdoiv()
-    {
-        $tantargyak = array();
-        $tanarok = array();
-        $valaszok = array();
-        $kerdesek = DB::select(DB::raw("SELECT * FROM kerdesek"));
-        $max_id = DB::select(DB::raw("select max(kerdoiv_id) as utolso from kerdoiv"));
-        $kerdoiv_id = $max_id[0]->utolso;
-        if ($kerdoiv_id == NULL) {
-            $kerdoiv_id = 1;
-        } else {
-            $kerdoiv_id++;
-        }
+        $valaszok  =  DB::select(DB::raw("select * from mentes where neptunkod = :neptunkod;"),
+            array('neptunkod' => $_SESSION['neptunkod']));
 
-        foreach ($results as $result) {
-            array_push($tantargyak, $result->nev);
-            array_push($tanarok, $this->getTanarNev($result->tantargy_id, $result->szak_id));
-        }
-        return view('kerdoiv', ['kerdesek' => $kerdesek, 'kivalasztott' => $tantargyak, 'tanarok' => $tanarok, 'utolso_kerdoiv' => $kerdoiv_id]);
+        return view('betoltKerdoiv', ['kerdesek' => $kerdesek,'kerdoiv_id'=>$kerdoiv_id,'tantargyak'=>$tantargyak,'tanarok'=>$tanarok,'valaszok' => $valaszok]);
     }
-    */
 
     public function kerdoivElkuldes()
     {
         session_start();
         $valaszok = Input::get("valaszok");
-        var_dump(end($valaszok)["vegleges"]);
-        $vane = DB::select(DB::raw("select count(*) as ossz from valaszok where neptunkod= :neptunkod"),array('neptunkod'=>$_SESSION['neptunkod']));
-
         if (is_array($valaszok) || is_object($valaszok)) {
-            for ($i = 0; $i < sizeof($valaszok) - 1; $i++) {
-//                if ($vane[0]->ossz == 0) {
+            if (end($valaszok)["vegleges"] == 1) {
+                for ($i = 0; $i < sizeof($valaszok) - 1; $i++) {
+
                     if ($valaszok[$i]['pont'] != 0) {
                         $valasz = new valasz;
                         $valasz->kerdes_id = $valaszok[$i]['kerdes_id'];
@@ -101,10 +83,10 @@ class KerdoivController extends Controller
                         $valasz->valasz = $valaszok[$i]['pont'];
                         $valasz->tantargy_id = $valaszok[$i]['tantargy_id'];
                         $valasz->tanar_id = $valaszok[$i]['tanar_id'];
-                        $valasz->neptunkod = $valaszok[$i]['neptunkod'];
                         $valasz->szak_id = $valaszok[$i]['szak_id'];
-                        $valasz->vegleges = end($valaszok)["vegleges"];
-                        $valasz->save();
+                        $valasz->tanev = $this->melyikTanev();
+                        $valasz->felev = $this->melyikFelev();
+                       $valasz->save();
                     }
                     if (end($valaszok)["megjegyzes"] != NULL) {
                         $megjegyzes = new megjegyzes;
@@ -112,18 +94,28 @@ class KerdoivController extends Controller
                         $megjegyzes->megjegyzes = end($valaszok)["megjegyzes"];
                         $megjegyzes->save();
                     }
-//                } else {
-//                    if ($valaszok[$i]['pont'] != 0) {
-//                        $valasz2 = Valasz::where('kerdes_id','=',$valaszok[$i]['kerdes_id'])
-//                                        ->where('tantargy_id','=',$valaszok[$i]['tantargy_id'])
-//                                        ->where('tanar_id','=',$valaszok[$i]['tanar_id'])
-//                                        ->where('neptunkod','=',$valaszok[$i]['neptunkod'])->first();
-//
-//                        $valasz2->valasz = $valaszok[$i]['pont'];
-//                        $valasz2->save();
-//                    }
                 }
-//            }
+            } else if (end($valaszok)["vegleges"] == 0){
+                for ($i = 0; $i < sizeof($valaszok) - 1; $i++) {
+                    if ($valaszok[$i]['pont'] != 0) {
+                        $mentes = new MentettValaszok;
+                        $mentes->kerdes_id = $valaszok[$i]['kerdes_id'];
+                        $mentes->kerdoiv_id = $valaszok[$i]['utolso_kerdoiv'];
+                        $mentes->valasz = $valaszok[$i]['pont'];
+                        $mentes->tantargy_id = $valaszok[$i]['tantargy_id'];
+                        $mentes->tanar_id = $valaszok[$i]['tanar_id'];
+                        $mentes->neptunkod = $valaszok[$i]['neptunkod'];
+                        $mentes->szak_id = $valaszok[$i]['szak_id'];
+                        $mentes->save();
+                    }
+                    if (end($valaszok)["megjegyzes"] != NULL) {
+                        $megjegyzes = new megjegyzes;
+                        $megjegyzes->neptunkod = $_SESSION['neptunkod'];
+                        $megjegyzes->megjegyzes = end($valaszok)["megjegyzes"];
+                        $megjegyzes->save();
+                    }
+                }
+            }
         }
         return response()->json(array('msg' => $valaszok), 200);
     }
@@ -181,6 +173,26 @@ class KerdoivController extends Controller
             array('tantargy' => $tantargy, 'szak' => $szak));
         $tanar = $res[0]->nev;
         return $tanar;
+    }
+
+    public function melyikFelev(){ //visszaadja melyik felevben vagyunk
+        $datum = date("m");
+        if ((($datum >= 9) and ($datum<=12)) || ($datum == 1)){
+            return 1;
+        }elseif (($datum >= 2) and ($datum <9)){
+            return 2;
+        }
+    }
+
+    public function melyikTanev(){ //visszaadja melyik tanevben vagyunk
+        $ev = date('Y');
+        $honap = date("m");
+        if ($honap >= 9 ){
+            return $ev.'/'.$ev+1;
+        }
+        elseif($honap <9){
+            return $ev-1 .'/'.$ev;
+        }
     }
 }
 

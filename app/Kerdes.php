@@ -10,6 +10,10 @@ class Kerdes extends Model
 
     protected $fillable = [
         'kerdes',
-        'valasz'
+        'valasz1',
+        'valasz2',
+        'valasz3',
+        'valasz4',
+        'valasz5',
     ];
 }

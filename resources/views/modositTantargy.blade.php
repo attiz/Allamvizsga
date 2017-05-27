@@ -39,15 +39,25 @@
 <div id="tanarAdatok">
     <form action="modositTanarAdatok" method="post">
         <input type="hidden" name="_token" value="{!! csrf_token() !!}">
-        <input type="hidden"  id="profilMentes" value="0" name="profilMentes"/>
-        <input type="hidden"  id="ora_id" value={{$adatok[0]->id}} name="ora_id"/>
+        <input type="hidden" id="profilMentes" value="0" name="profilMentes"/>
+        <input type="hidden" id="ora_id" value={{$adatok[0]->id}} name="ora_id"/>
         <div class="labelDiv">
             <label>Tantárgy</label>
-            <input type="text" id="nev" name="nev" readonly value="{{$adatok[0]->nev}}"/>
+            <select name="tantargy" class="modositTantargy">
+                <option value={{$adatok[0]->tantargy_id}}>{{$adatok[0]->nev}}</option>
+            </select>
         </div>
         <div class="labelDiv">
             <label>Tanár</label>
-            <input type="text" id="tanszek" name="tanszek" readonly value="{{$adatok[0]->tanar}}"/>
+            <select name="tantargy" class="modositTantargy">
+                @foreach($tanarok as $tanar)
+                    @if($adatok[0]->tanar_id == $tanar->id)
+                        <option value={{$tanar->id}} selected>{{$tanar->nev}}</option>
+                    @else
+                        <option value={{$tanar->id}}>{{$tanar->nev}}</option>
+                    @endif
+                @endforeach
+            </select>
         </div>
         <input type="button" id="szerkesztes" value="Szerkesztés"></inputbutton>
         <button type="submit" id="mentes" style="display: none">Mentés</button>

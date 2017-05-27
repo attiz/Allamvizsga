@@ -4,9 +4,10 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Valasz extends Model
+class MentettValaszok extends Model
 {
-     protected $table = 'valaszok';
+    //
+    protected $table = 'mentes';
 
     protected $fillable = [
         'kerdoiv_id',
@@ -14,7 +15,6 @@ class Valasz extends Model
         'valasz',
         'tantargy_id',
         'szak_id',
-        'tanev',
-        'felev',
+        'neptunkod',
     ];
 }

@@ -35,18 +35,23 @@ class DiakController extends Controller
 
         if ($acces == 1) {
             $_SESSION['neptunkod'] = $kod;
-            $res = DB::select(DB::raw("SELECT Count(*) as ossz,sum(vegleges) as veg FROM valaszok WHERE neptunkod = :somevariable"), array(
+            $res = DB::select(DB::raw("SELECT Count(*) as ossz FROM mentes WHERE neptunkod = :somevariable"), array(
                 'somevariable' => $kod,
             ));
+            $res2 = DB::select(DB::raw("SELECT kitoltott FROM diak WHERE neptun = :somevariable"), array(
+                'somevariable' => $kod,
+            ));
+
             $kitoltve = $res[0]->ossz;
-            $vegleges = $res[0]->veg;
-            if ($kitoltve == 0) {
-                return Redirect::to('selectTantargyak');
-            } elseif ($kitoltve != 0) {
-                if ($vegleges == 0) {
+            $vegleges = $res2[0]->kitoltott;
+            if ($vegleges == 1){
+                return Redirect::to('info');
+            }
+            else{
+                if ($kitoltve == 0){
+                    return Redirect::to('selectTantargyak');
+                }elseif ($kitoltve != 0){
                     return Redirect::to('betoltKerdoiv');
-                } else {
-                    return Redirect::to('info');
                 }
             }
 
@@ -86,19 +91,21 @@ class DiakController extends Controller
 
                 foreach ($data as $neptunkodok) {
                     if (!empty($neptunkodok)) {
-                        $insert[] = ['neptun' => $neptunkodok['hallgato_neptun_kodja']];
+                        if(!$this->letezik($neptunkodok['hallgato_neptun_kodja'])) { //megnezi hogy letezik-e mar
+                            $insert[] = ['neptun' => $neptunkodok['hallgato_neptun_kodja']];
+                        }
                     }
                 }
 
                 if (!empty($insert)) {
-                    Diak::insert($insert);
+                    Diak::insert($insert); //elmenti a diakot az adatbazisba
                     return back()->with('success', 'Sikeres!');
                 }
 
             }
         }
 
-        return back()->with('error', 'Valasszon ki egy fajlt!');
+        return back()->with('error', 'Hiba történt!');
     }
 
     public function exportDiak(Request $request)
@@ -133,6 +140,16 @@ class DiakController extends Controller
         unset($_SESSION['neptunkod']);
         session_destroy();
         return Redirect::to('loginDiak');
+    }
+
+    function letezik(string $neptunkod){
+        $diak = Diak::where('neptun', '=', $neptunkod)->first();
+        if ($diak == null) {
+            return 0;
+        }
+        else{
+            return 1;
+        }
     }
 }
 

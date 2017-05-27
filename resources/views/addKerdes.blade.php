@@ -30,8 +30,28 @@
             <input type="text" id="kerdes" contenteditable="true" name="kerdes"/>
         </div>
         <div class="labelDiv">
-            <label>Válasz lehetőségek</label>
-            <input type="text" id="valaszok" contenteditable="true" name="valaszok"/>
+            <label>1. válasz lehetőség</label>
+            <input type="text" class="valaszok" name="valasz1"  value=""/>
+        </div>
+        <div class="labelDiv">
+            <label>2. válasz lehetőség</label>
+            <input type="text" class="valaszok" name="valasz2"  value=""/>
+        </div>
+        <div class="labelDiv">
+            <label>3. válasz lehetőség</label>
+            <input type="text" class="valaszok" name="valasz3"  value=""/>
+        </div>
+        <div class="labelDiv">
+            <label>4. válasz lehetőség</label>
+            <input type="text" class="valaszok" name="valasz4"  value=""/>
+        </div>
+        <div class="labelDiv">
+            <label>5. válasz lehetőség</label>
+            <input type="text" class="valaszok" name="valasz5"  value=""/>
+        </div>
+        <div class="labelDivAktiv">
+            <input type="checkbox" name="aktiv" class="tantargyak" value=1>
+            <label>aktív</label>
         </div>
         <button type="submit" id="hozzaad">Hozzáad</button>
     </form>

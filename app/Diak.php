@@ -15,5 +15,6 @@ class Diak extends Model
 
     protected $fillable = [
         'neptun',
+        'kitoltott',
     ];
 }

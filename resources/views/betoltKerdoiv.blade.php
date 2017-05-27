@@ -16,23 +16,32 @@
     <script>
         $(document).ready(function () {
             valaszok = [];
+            var array = "{{ json_encode($kerdesek,JSON_UNESCAPED_UNICODE ) }}";
+            var array2 = "{{ json_encode($tantargyak,JSON_UNESCAPED_UNICODE ) }}";
+            var decoded = array.replace(/&quot;/g, '"');
+            var decoded2 = array2.replace(/&quot;/g, '"');
+            var kerdesek = JSON.parse(decoded);
+            var tantargyak = JSON.parse(decoded2);
+            var valaszokTomb = "{{ json_encode($valaszok,JSON_UNESCAPED_UNICODE ) }}";
+            var dekodolva = valaszokTomb.replace(/&quot;/g, '"');
+            var vTomb = JSON.parse(dekodolva);
+            var index = $('#kerdes_id').val();
+            vTomb.forEach(function (val) {
+                if(index == val.kerdes_id){
+                    $('input[name=valaszok' + val.tantargy_id + '[]]').attr('checked', true);
+                }
+            });
+
             $('#tovabb').click(function () {
                 $('html, body').animate({scrollTop: 0}, 'fast');
-                var index = $('#kerdes_id').val();
                 var neptunkod = $('#neptunkod').val();
                 var szak_id = $('#szak_id').val();
-                var array = "{{ json_encode($kerdesek,JSON_UNESCAPED_UNICODE ) }}";
-                var array2 = "{{ json_encode($tantargyak,JSON_UNESCAPED_UNICODE ) }}";
-                var decoded = array.replace(/&quot;/g, '"');
-                var decoded2 = array2.replace(/&quot;/g, '"');
-                var kerdesek = JSON.parse(decoded);
-                var tantargyak = JSON.parse(decoded2);
                 if (index >= kerdesek.length - 1) {
                     document.getElementById("tovabb").style.display = "none";
                     document.getElementById("megjegyzes").style.display = "block";
                 }
                 document.getElementById("kerdes").innerHTML = kerdesek[index].kerdes;
-                document.getElementById("valasz").innerHTML = kerdesek[index].valasz;
+                document.getElementById("valasz").innerHTML = kerdesek[index].valasz1 + ',' +kerdesek[index].valasz2 + ','+kerdesek[index].valasz3 + ','+kerdesek[index].valasz4 + ','+kerdesek[index].valasz5;
                 index++;
                 $('#kerdes_id').val(index);
                 tantargyak.forEach(function (tantargy) {
@@ -51,7 +60,12 @@
                     element.szak_id = szak_id;
                     valaszok.push(element);
                     $('input[name=valaszok' + tantargy.id + '[]]').attr('checked', false);
-                    console.log(valaszok);
+                });
+                vTomb.forEach(function (val) {
+                    if (index == val.kerdes_id) {
+                        $('input[name=valaszok' + val.tantargy_id + '[]]').attr('checked', true);
+                        console.log(val.valasz);
+                    }
                 });
             });
             $('#elkuld').click(function () {
@@ -126,7 +140,7 @@
         <input type="hidden" id="szak_id" value={{$tantargyak[0]->szak_id}}>
         <input type="hidden" id="neptunkod" value={{$_SESSION['neptunkod']}}>
         <div class="kerdes" name="kerdes" id="kerdes">{{$kerdesek[0]->kerdes}}</div>
-        <div class="valasz" id="valasz">{{$kerdesek[0]->valasz}}</div>
+        <div class="valasz" id="valasz">{{$kerdesek[0]->valasz1}},{{$kerdesek[0]->valasz2}},{{$kerdesek[0]->valasz3}},{{$kerdesek[0]->valasz4}},{{$kerdesek[0]->valasz5}}</div>
         <div class="optionsContainer">
             @foreach($tantargyak as $index =>$tantargy)
                 <div class="answers">

@@ -14,7 +14,7 @@ class TanarController extends Controller
 {
     public function showView()
     {
-        $tanarok = DB::select(DB::raw("SELECT * FROM tanar;"));
+        $tanarok = DB::select(DB::raw("SELECT * FROM tanar order by nev;"));
         return view('excel.importExportUsers', ['tanarok' => $tanarok]);
     }
 
@@ -67,7 +67,9 @@ class TanarController extends Controller
 
                 foreach ($data as $tanarok) {
                     if (!empty($tanarok)) {
-                        $insert[] = ['nev' => $this->doktorLevagas($tanarok['nev']), 'felhasznalo' => $this->generateUsername($this->clean($tanarok['nev'])), 'jelszo' => $this->generatePassword($tanarok['nev'])];
+                        if (!$this->letezik($tanarok['nev'])) {
+                            $insert[] = ['nev' => $this->doktorLevagas($tanarok['nev']), 'felhasznalo' => $this->generateUsername($this->clean($tanarok['nev'])), 'jelszo' => $this->generatePassword($tanarok['nev'])];
+                        }
                     }
 
                 }
@@ -126,7 +128,8 @@ class TanarController extends Controller
         return back()->with('error', 'Hiba!');
     }
 
-    public function addTanarView(){
+    public function addTanarView()
+    {
         return view('addTanar');
     }
 
@@ -292,6 +295,16 @@ class TanarController extends Controller
             return 1;
         } else {
             return 0;
+        }
+    }
+
+    function letezik(string $nev)
+    {
+        $tanar = Tanar::where('nev', '=', $nev)->first();
+        if ($tanar == null) {
+            return 0;
+        } else {
+            return 1;
         }
     }
 }

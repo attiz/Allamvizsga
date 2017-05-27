@@ -144,7 +144,12 @@
             <option value={{$szak->id}}>{{$szak->szaknev}}</option>
         @endforeach
     </select>
+    <span style="padding-left: 10px;">Félév</span>
 
+    <select id="felev" name="felev">
+        <option class="fel" value=1>I.</option>
+        <option class="fel" value=2>II.</option>
+    </select>
     <button type="submit" id="orarend">Mehet</button>
     {{Form::close()}}
 </div>

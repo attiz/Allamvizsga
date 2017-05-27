@@ -16,25 +16,31 @@
     <script>
         $(document).ready(function () {
             valaszok = [];
+            var array = "{{ json_encode($kerdesek,JSON_UNESCAPED_UNICODE ) }}";
+            var array2 = "{{ json_encode($tantargyak,JSON_UNESCAPED_UNICODE ) }}";
+            var decoded = array.replace(/&quot;/g, '"');
+            var decoded2 = array2.replace(/&quot;/g, '"');
+            var kerdesek = JSON.parse(decoded);
+            var tantargyak = JSON.parse(decoded2);
+            var index = $('#kerdes_id').val();
+            console.log(index);
             $('#tovabb').click(function () {
                 $('html, body').animate({scrollTop: 0}, 'fast');
-                var index = $('#kerdes_id').val();
-                console.log('kerdes: ' + index);
                 var neptunkod = $('#neptunkod').val();
                 var szak_id = $('#szak_id').val();
-                var array = "{{ json_encode($kerdesek,JSON_UNESCAPED_UNICODE ) }}";
-                var array2 = "{{ json_encode($tantargyak,JSON_UNESCAPED_UNICODE ) }}";
-                var decoded = array.replace(/&quot;/g, '"');
-                var decoded2 = array2.replace(/&quot;/g, '"');
-                var kerdesek = JSON.parse(decoded);
-                var tantargyak = JSON.parse(decoded2);
-                if (index >= kerdesek.length - 1) {
+                console.log(index);
+                if (index >= kerdesek.length - 2) {
                     document.getElementById("tovabb").style.display = "none";
                     document.getElementById("megjegyzes").style.display = "block";
                 }
-                document.getElementById("kerdes").innerHTML = kerdesek[index].kerdes;
-                document.getElementById("valasz").innerHTML = kerdesek[index].valasz;
                 index++;
+                if (index == 1){
+                    document.getElementById("vissza").style.display = "block";
+                }
+                document.getElementById("kerdes").innerHTML = kerdesek[index].kerdes;
+                document.getElementById("valasz").innerHTML = kerdesek[index].valasz1 + ',' +kerdesek[index].valasz2 + ','+kerdesek[index].valasz3 + ','+kerdesek[index].valasz4 + ','+kerdesek[index].valasz5;
+
+                console.log(index);
                 $('#kerdes_id').val(index);
                 tantargyak.forEach(function (tantargy) {
                     var pont = $("input[name=valaszok" + tantargy.id + "[]]:checked").val();
@@ -54,6 +60,20 @@
                     $('input[name=valaszok' + tantargy.id + '[]]').attr('checked', false);
                 });
             });
+            $('#vissza').click(function () {
+                index--;
+                console.log(index);
+                console.log(kerdesek[index].kerdes);
+                document.getElementById("kerdes").innerHTML = kerdesek[index].kerdes;
+                document.getElementById("valasz").innerHTML = kerdesek[index].valasz1 + ',' +kerdesek[index].valasz2 + ','+kerdesek[index].valasz3 + ','+kerdesek[index].valasz4 + ','+kerdesek[index].valasz5;
+                if(index <=0){
+                    document.getElementById("vissza").style.display = "none";
+                }
+                if (index >= kerdesek.length - 2) {
+                    document.getElementById("megjegyzes").style.display = "none";
+                    document.getElementById("tovabb").style.display = "block";
+                }
+            })
             $('#elkuld').click(function () {
                 $('html, body').animate({scrollTop: 0}, 'fast');
                 document.getElementById("veglegesit").style.display = "block";
@@ -122,12 +142,12 @@
     </div>
     <div id="surveyContainer">
         {{ Form::hidden('utolso_kerdoiv',$utolso_kerdoiv)}}
-        <input type="hidden" id="kerdes_id" value=1>
+        <input type="hidden" id="kerdes_id" value=0>
         <input type="hidden" id="utolso_kerdoiv" value={{$utolso_kerdoiv}}>
         <input type="hidden" id="neptunkod" value={{$_SESSION['neptunkod']}}>
         <input type="hidden" id="szak_id" value={{$_SESSION['szak']}}>
         <div class="kerdes" name="kerdes" id="kerdes">{{$kerdesek[0]->kerdes}}</div>
-        <div class="valasz" id="valasz">{{$kerdesek[0]->valasz}}</div>
+        <div class="valasz" id="valasz">{{$kerdesek[0]->valasz1}},{{$kerdesek[0]->valasz2}},{{$kerdesek[0]->valasz3}},{{$kerdesek[0]->valasz4}},{{$kerdesek[0]->valasz5}}</div>
         <div class="optionsContainer">
             @foreach($tantargyak as $index =>$tantargy)
                 <div class="answers">
@@ -153,7 +173,8 @@
         </div>
     </div>
     <div id="buttons">
-        <input type="submit" name="action" value="Tovább" class="button" id="tovabb"/>
+        <input type="submit" name="action" value="Tovább" class="button" id="tovabb" />
+        <input type="submit" name="action" value="Vissza" class="button" id="vissza" style="display: none"/>
         <input type="submit" name="action" value="Elküld" class="button" id="elkuld"/>
     </div>
     <div style="padding: 40px">

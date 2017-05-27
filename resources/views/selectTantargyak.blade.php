@@ -22,7 +22,7 @@
             <p class="p1">Kérlek válaszd ki a tantárgyaid!</p>
             {{Form::open(array('url' => 'generateKerdoiv', 'method' => 'post'))}}
             @foreach ($tantargyak as $res)
-                <input type="checkbox" name="tantargyak[]" class="tantargyak" value={{$res->tantargy_id}}|{{$res->tanar_id}}>
+                <input type="checkbox" name="tantargyak[]" class="tantargyak" value={{$res->tantargy_id}}|{{$res->tanar_id}} >
                 <label class="l1">{{$res->nev}} - {{$res->tanar}} </label><br>
             @endforeach
             <p></p>

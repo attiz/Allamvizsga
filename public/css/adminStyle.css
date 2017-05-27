@@ -111,6 +111,13 @@ span {
     margin-bottom: 10px;
 }
 
+.labelDivAktiv {
+    display: inline-block;
+    width: 40%;
+    margin-bottom: 10px;
+    padding-left: 50%;
+}
+
 #tanarAdatok input[type=text], #kerdesAdatok input {
     float: right;
     font-size: 14px;
@@ -343,6 +350,40 @@ select {
     width: 200px;
     font-size: 19px;
     box-shadow: 1px 1px 11px #d3d3d3;
+}
+
+#felev{
+    -webkit-border-radius: 20px;
+    -moz-border-radius: 20px;
+    border-radius: 20px;
+    background: transparent no-repeat scroll 319px center;
+    color: #ffffff;
+    text-align: center;
+    overflow: hidden;
+    width: 100px;
+    font-size: 19px;
+    box-shadow: 1px 1px 11px #d3d3d3;
+}
+
+.modositTantargy{
+    -webkit-border-radius: 20px;
+    -moz-border-radius: 20px;
+    border-radius: 20px;
+    background: transparent no-repeat scroll 319px center;
+    color: #256E43;
+    text-align: center;
+    overflow: hidden;
+    width: 450px;
+    font-size: 19px;
+    box-shadow: 1px 1px 11px #d3d3d3;
+    float: right;
+}
+
+.modositTantargy option{
+    background-color: transparent;
+    color: #256E43;
+    opacity: .7;
+    z-index: -1;
 }
 
 select option {

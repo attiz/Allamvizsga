@@ -28,7 +28,9 @@ class KerdesController extends Controller
 
                 foreach ($data as $kerdesek) {
                     if (!empty($kerdesek)) {
-                        $insert[] = ['kerdes' => $kerdesek['kerdes'], 'valasz' => $kerdesek['valasz']];
+                        if (!$this->letezik($kerdesek['kerdes'])) {
+                            $insert[] = ['kerdes' => $kerdesek['kerdes'], 'valasz1' => $kerdesek['valasz1'], 'valasz2' => $kerdesek['valasz2'], 'valasz3' => $kerdesek['valasz3'], 'valasz4' => $kerdesek['valasz4'], 'valasz5' => $kerdesek['valasz5']];
+                        }
                     }
                 }
 
@@ -57,7 +59,11 @@ class KerdesController extends Controller
     {
         $kerdes = new kerdes;
         $kerdes->kerdes = Input::get("kerdes");
-        $kerdes->valasz = Input::get("valasz");
+        $kerdes->valasz1 = Input::get("valasz1");
+        $kerdes->valasz2 = Input::get("valasz2");
+        $kerdes->valasz3 = Input::get("valasz3");
+        $kerdes->valasz4 = Input::get("valasz4");
+        $kerdes->valasz5 = Input::get("valasz5");
         $kerdes->save();
         return back()->with('siker', 'Sikeres hozzáadás!');
     }
@@ -88,9 +94,20 @@ class KerdesController extends Controller
         if ($_POST['profilMentes'] == 'ment') {
             $kerdes = Kerdes::whereid($_POST['kerdes_id'])->firstOrFail();
             $ker = Input::get("kerdes");
-            $valasz = Input::get("valaszok");
+            $valasz1 = Input::get("valasz1");
+            $valasz2 = Input::get("valasz2");
+            $valasz3 = Input::get("valasz3");
+            $valasz4 = Input::get("valasz4");
+            $valasz5 = Input::get("valasz5");
             $kerdes->kerdes = $ker;
-            $kerdes->valasz = $valasz;
+            $kerdes->valasz1 = $valasz1;
+            $kerdes->valasz2 = $valasz2;
+            $kerdes->valasz3 = $valasz3;
+            $kerdes->valasz4 = $valasz4;
+            $kerdes->valasz5 = $valasz5;
+            if(!isset($_POST['aktiv'])){
+                $kerdes->aktiv = 0;
+            }
             $kerdes->save();
             return back()->with('siker', 'Sikeres mentés!');
         }
@@ -107,5 +124,14 @@ class KerdesController extends Controller
         return back();
     }
 
+    function letezik(string $kerdes){
+        $kerd = Kerdes::where('kerdes', '=', $kerdes)->first();
+        if ($kerd == null) {
+            return 0;
+        }
+        else{
+            return 1;
+        }
+    }
 
 }
