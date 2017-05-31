@@ -55,6 +55,7 @@ class OrarendController extends Controller
         if ($request->hasFile('import_osztaly')) {
 
             $path = $request->file('import_osztaly')->getRealPath();
+            $insert = array();
 
             $data = Excel::load($path, function ($reader) {
 
@@ -64,14 +65,14 @@ class OrarendController extends Controller
 
                 foreach ($data as $osztalyok) {
                     if (!empty($osztalyok)) {
-                        if(!$this->letezikSzak($osztalyok['osztaly'])) {
-                            $insert[] = ['szaknev' => $osztalyok['osztaly'], 'rovidites' => $osztalyok['rovidites']];
+                        if (!$this->letezikSzak($this->levagSzakSzam($osztalyok['osztaly']))) {
+                            array_push($insert, ['szaknev' => $this->levagSzakSzam($osztalyok['osztaly'])]);
                         }
                     }
                 }
-
-                if (!empty($insert)) {
-                    Szak::insert($insert);
+                $adatok = array_unique($insert, SORT_REGULAR);
+                if (!empty($adatok)) {
+                    Szak::insert($adatok);
                     return back()->with('success2', "Sikeres!");
                 }
 
@@ -87,6 +88,7 @@ class OrarendController extends Controller
     {
 
         if ($request->hasFile('import_orak')) {
+            $insert = array();
 
             $path = $request->file('import_orak')->getRealPath();
 
@@ -99,20 +101,24 @@ class OrarendController extends Controller
                 foreach ($data as $orak) {
                     if (!empty($orak)) {
                         if ($orak['osztaly'] != NULL) {
-                            $osztaly = $orak['osztaly'];
+                            $osztaly = $this->levagSzakSzam($orak['osztaly']);
                         }
-
-                        if ($orak['tanar'] != NULL && $orak['tantargy'] != NULL) {
-                            $insert[] = ['tanar_id' => $this->getTanarID($orak['tanar']), 'tantargy_id' => $this->getTantargyID($orak['tantargy']),
-                                'szak_id' => $this->getSzakID($osztaly), 'felev' => $this->melyikFelev()];
-
-
+                        if ($orak['tanar'] != NULL) {
+                            if ( $orak['tantargy'] != NULL) {
+                                if($this->getTanarID($orak['tanar']) != NULL && $this->getTantargyID($orak['tantargy']) != NULL && $this->getSzakID($osztaly) != NULL) {
+                                    if (!$this->letezikOra($this->getTanarID($orak['tanar']), $this->getTantargyID($orak['tantargy']), $this->getSzakID($osztaly))) {
+                                        $insert[] = ['tanar_id' => $this->getTanarID($orak['tanar']), 'tantargy_id' => $this->getTantargyID($orak['tantargy']),
+                                            'szak_id' => $this->getSzakID($osztaly), 'felev' => $this->melyikFelev()];
+                                    }
+                                }
+                            }
                         }
                     }
                 }
             }
-            if (!empty($insert)) {
-                Orak::insert($insert);
+            $adatok = array_unique($insert, SORT_REGULAR);
+            if (!empty($adatok)) {
+                Orak::insert($adatok);
                 return back()->with('success3', "Sikeres!");
             }
 
@@ -157,10 +163,10 @@ class OrarendController extends Controller
     {
         $szak_id = $_POST['szakok'];
         $felev = $_POST['felev'];
-        $orarend = DB::select(DB::raw("select tt.id as id,t.nev, ta.nev as tantargy, szak_id from tanar_tantargy tt,tanar t,tantargy ta where tt.szak_id = :szak_id and tt.tanar_id = t.id and tt.tantargy_id = ta.id and tt.felev = :felev;")
-            , array('szak_id' => $szak_id,'felev'=>$felev));
+        $orarend = DB::select(DB::raw("select tt.id as id,t.nev, ta.nev as tantargy, szak_id from tanar_tantargy tt,tanar t,tantargy ta where tt.szak_id = :szak_id and tt.tanar_id = t.id and tt.tantargy_id = ta.id and tt.felev = :felev order by ta.nev;")
+            , array('szak_id' => $szak_id, 'felev' => $felev));
         $szakok = DB::select(DB::raw("SELECT * FROM szak;"));
-        return view('updateOrarend', ['szakok' => $szakok, 'orarend' => $orarend]);
+        return view('updateOrarend', ['szakok' => $szakok, 'orarend' => $orarend,'szak'=>$szak_id,'felev'=>$felev]);
     }
 
     public function addOra()
@@ -216,6 +222,12 @@ class OrarendController extends Controller
         } else {
             return 1;
         }
+    }
+
+    function levagSzakSzam(string $szak)
+    {
+        $szaknev = preg_replace('/[0-9].*+/', '', $szak);
+        return $szaknev;
     }
 
 }

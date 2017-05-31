@@ -58,7 +58,7 @@
             </div>
         </div>
     </div>
-    <form id="tanarUpdate">
+    <div id="tanarUpdate">
         <div class="buttons">
             <table>
                 <tr>
@@ -94,17 +94,18 @@
                     <td>
                         <div class="selector">
                             <div id="updateTanar">
-                                <button id="1" type="button"
-                                        onclick="window.open('updateTanar','container2','resizable=yes')">Frissítés
-                                </button>
-                                <span id="tanarSpan">Tanárok adatainak frissítése</span>
+                                <form action="frissitTanar" method="get">
+                                    <button type="submit">Frissítés
+                                    </button>
+                                    <span id="tanarSpan">Tanárok adatainak frissítése</span>
+                                </form>
                             </div>
                         </div>
                     </td>
                 </tr>
             </table>
         </div>
-    </form>
+    </div>
 </div>
 
 <div class="classContainer">

@@ -5,7 +5,7 @@
 <body>
 @if (isset($szakok))
     <div id="kivalasztSzak">
-        <h3>Üdvözlünk, <b>{{$_SESSION['neptunkod']}}</b> ! </h3>
+        <h2 id="udv">Üdvözlünk, <b>{{$_SESSION['neptunkod']}}</b> ! </h2>
         <p class="p1">Kérlek válaszd ki a csoportodat!</p>
         {{Form::open(array('url' => 'generateTantargyak', 'method' => 'post'))}}
         <select class="szakok" name="szakok">

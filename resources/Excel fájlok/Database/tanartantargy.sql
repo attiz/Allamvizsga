@@ -1,9 +1,9 @@
 drop table tanar_tantargy;
 create table tanar_tantargy(id int(5) primary key auto_increment, tanar_id int(5) references tanar(id),tantargy_id int(5) references tantargy(id),szak_id int(5) references szak(id),felev int(1),
-aktiv int(1) default 1);
+aktiv int(1) default 1,created_at timestamp,updated_at timestamp);
 
 
-select * from tanar_tantargy where felev = 1;
+select * from tanar_tantargy;
 delete from tanar_tantargy where felev = 1;
 select tanar_tantargy.*,tantargy.nev from tanar_tantargy,tantargy where tantargy.id = tanar_tantargy.tantargy_id and felev = 2 and szak_id = 164;
 select count(*) from tanar_tantargy;

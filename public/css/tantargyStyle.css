@@ -74,7 +74,7 @@ body
     background:  transparent no-repeat scroll 319px center;
     color: #000000;
     overflow:hidden;
-    width:350px;
+    width:250px;
     font-size: 19px;
     box-shadow: 1px 1px 11px #d3d3d3;
 }
@@ -103,4 +103,45 @@ select option
     font-family: Georgia, "Times New Roman", Times, serif;
     font-size: 15px;
     color: #0f3b16;
+}
+
+#kitoltve {
+    position: relative;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+#szakKivalaszt {
+    color: white;
+    background-color: #256E43;
+    padding-top: 50px;
+    padding-bottom: 20px;
+    width: 100%;
+    height: 100px;
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+    box-shadow: 3px 3px 2px #5C5C5C;
+}
+
+#surveyContainer {
+    position: relative;
+    margin: 0 auto;
+}
+
+#container {
+    width: 70%;
+    margin: 0 auto;
+}
+#udv{
+    display: block;
+    margin-top: 1em;
+    margin-bottom: 1em;
+    margin-left: 0;
+    margin-right: 0;
+    font-weight: bold;
+    font-family: Comic Sans MS;
+    color: #000000;
 }

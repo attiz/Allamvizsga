@@ -10,6 +10,5 @@ class Szak extends Model
 
     protected $fillable = [
         'szaknev',
-        'rovidites'
     ];
 }

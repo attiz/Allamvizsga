@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use DB;
+use App\Orak;
 
 class TantargyController extends Controller
 {
@@ -53,18 +54,32 @@ class TantargyController extends Controller
         session_start();
         $tanarok = DB::select(DB::raw("select * from tanar"));
         if (isset($_POST['ora_id'])) {
-            $adatok = DB::select(DB::raw("select tanar.nev as tanar,tanar.id as tanar_id,tantargy.nev,tantargy.id as tantargy_id,tanar_tantargy.id as id from tanar_tantargy,tanar,tantargy where tantargy.id = tanar_tantargy.tantargy_id and
+            $adatok = DB::select(DB::raw("select tanar.nev as tanar,tanar.id as tanar_id,tantargy.nev,tantargy.id as tantargy_id,tanar_tantargy.id as id,tanar_tantargy.szak_id as szak from tanar_tantargy,tanar,tantargy where tantargy.id = tanar_tantargy.tantargy_id and
             tanar.id = tanar_tantargy.tanar_id and tanar_tantargy.id = :id;"), array(
                 'id' => $_POST['ora_id']
             ));
             $_SESSION['modositOraId'] = $_POST['ora_id'];
             return view('modositTantargy', ['adatok' => $adatok,'tanarok'=>$tanarok]);
         } else {
-            $adatok = DB::select(DB::raw("select tanar.nev as tanar,tanar.id as tanar_id,tantargy.nev,tantargy.id as tantargy_id,tanar_tantargy.id as id from tanar_tantargy,tanar,tantargy where tantargy.id = tanar_tantargy.tantargy_id and
+            $adatok = DB::select(DB::raw("select tanar.nev as tanar,tanar.id as tanar_id,tantargy.nev,tantargy.id as tantargy_id,tanar_tantargy.id as id,tanar_tantargy.szak_id as szak from tanar_tantargy,tanar,tantargy where tantargy.id = tanar_tantargy.tantargy_id and
             tanar.id = tanar_tantargy.tanar_id and tanar_tantargy.id = :id;"), array(
                 'id' => $_SESSION['modositOraId']
             ));
             return view('modositTantargy', ['adatok' => $adatok,'tanarok'=>$tanarok]);
+        }
+    }
+
+    function modositTantargyAdatok(){
+        if ($_POST['profilMentes'] == 'ment') {
+            $ora = Orak::whereid($_POST['ora_id'])->firstOrFail();
+            $tanar = $_POST['tanar'];
+            $tantargy = $_POST['tantargy'];
+            $szak = $_POST['szak_id'];
+            $ora->tanar_id = $tanar;
+            $ora->tantargy_id = $tantargy;
+            $ora->szak_id = $szak;
+            $ora->save();
+            return back()->with('siker', 'Sikeres mentés!');
         }
     }
 

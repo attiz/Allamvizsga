@@ -256,7 +256,7 @@ li a:hover:not(.active) {
     line-height: 20px;
     margin: 0 3vw;
     display: inline-block;
-    width: 350px;
+    width: 380px;
     color: #000000;
 }
 
@@ -350,6 +350,28 @@ select {
     width: 200px;
     font-size: 19px;
     box-shadow: 1px 1px 11px #d3d3d3;
+}
+
+#tanarokSelect{
+    -webkit-border-radius: 20px;
+    -moz-border-radius: 20px;
+    border-radius: 20px;
+    background: transparent no-repeat scroll 319px center;
+    color: #ffffff;
+    text-align: center;
+    text-align-last: center;
+    overflow: hidden;
+    width: 250px;
+    font-size: 22px;
+    box-shadow: 1px 1px 11px #d3d3d3;
+}
+
+#tanarokSelect option{
+    background-color: transparent;
+    color: #256E43;
+    opacity: .7;
+    z-index: -1;
+    text-align: left;
 }
 
 #felev{
@@ -670,6 +692,7 @@ li.dropdown {
 .modositGombok{
     float:right;
 }
+
 
 
 

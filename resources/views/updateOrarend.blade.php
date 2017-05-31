@@ -39,7 +39,7 @@
     <div id="popup">
         <form action="feltoltTantargy" method="post" enctype="multipart/form-data">
             <input type="hidden" name="_token" value="{{ csrf_token() }}">
-            <p class="popupTitle" >Tantárgyak feltöltése</p>
+            <p class="popupTitle">Tantárgyak feltöltése</p>
             <div class="popupButtonContainer">
                 <input type="file" name="import_tantargy" id="import_tantargy">
                 <button>Feltöltés</button>
@@ -139,17 +139,38 @@
     {{Form::open(array('url' => 'showOrarend','method' => 'POST'))}}
     <span>Szak</span>
 
-    <select name="szakok">
-        @foreach($szakok as $szak)
-            <option value={{$szak->id}}>{{$szak->szaknev}}</option>
-        @endforeach
+    <select name="szakok" id="szakok">
+        @if (isset($szak))
+            @foreach($szakok as $sz)
+                @if($szak == $sz->id)
+                    <option value={{$sz->id}} selected>{{$sz->szaknev}}</option>
+                @else
+                    <option value={{$sz->id}}>{{$sz->szaknev}}</option>
+                @endif
+            @endforeach
+        @else
+            @foreach($szakok as $sz)
+                <option value={{$sz->id}}>{{$sz->szaknev}}</option>
+            @endforeach
+        @endif
     </select>
     <span style="padding-left: 10px;">Félév</span>
-
-    <select id="felev" name="felev">
-        <option class="fel" value=1>I.</option>
-        <option class="fel" value=2>II.</option>
-    </select>
+    @if(isset($felev))
+        <select id="felev" name="felev">
+            @if ($felev == 1)
+                <option class="fel" value=1 selected>I.</option>
+                <option class="fel" value=2>II.</option>
+            @else
+                <option class="fel" value=1>I.</option>
+                <option class="fel" value=2 selected>II.</option>
+            @endif
+        </select>
+    @else
+        <select id="felev" name="felev">
+            <option class="fel" value=1>I.</option>
+            <option class="fel" value=2>II.</option>
+        </select>
+    @endif
     <button type="submit" id="orarend">Mehet</button>
     {{Form::close()}}
 </div>
@@ -182,7 +203,8 @@
                 </div>
             @endforeach
             <div class="fejlec">
-                <span class="ujTanGomb"><a href="addOra" target="container2" id="hozzaadas">Új rekord hozzáadása</a></span>
+                <span class="ujTanGomb"><a href="addOra" target="container2"
+                                           id="hozzaadas">Új rekord hozzáadása</a></span>
             </div>
 
 

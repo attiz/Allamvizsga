@@ -256,6 +256,17 @@ class TanarController extends Controller
 
     }
 
+    function modositTanarSzures(){
+        $tanarok = DB::select(DB::raw("SELECT id,nev FROM tanar order by nev;"));
+        $adatok = DB::select(DB::raw("SELECT * FROM tanar where id = :id;"),array('id'=>$_POST['tanarok']));
+        return view('updateTanar',['adatok'=>$adatok,'tanarok'=>$tanarok,'kivalasztott' => $_POST['tanarok']]);
+    }
+
+    function tanarFrissites(){
+        $tanarok = DB::select(DB::raw("SELECT id,nev FROM tanar order by nev;"));
+        return view('updateTanar',['tanarok'=>$tanarok]);
+    }
+
     function torolTanar()
     {
         Tanar::where('id', $_POST['tanID'])->delete();

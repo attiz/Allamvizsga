@@ -27,8 +27,13 @@
             var vTomb = JSON.parse(dekodolva);
             var index = $('#kerdes_id').val();
             vTomb.forEach(function (val) {
-                if(index == val.kerdes_id){
-                    $('input[name=valaszok' + val.tantargy_id + '[]]').attr('checked', true);
+                if (index == val.kerdes_id - 1) {
+                    var radios = document.getElementsByName('valaszok' + val.tantargy_id + '[]');
+                    for (i = 0; i < radios.length; i++) {
+                        if (radios[i].value == val.valasz) {
+                            radios[i].checked = true;
+                        }
+                    }
                 }
             });
 
@@ -36,13 +41,16 @@
                 $('html, body').animate({scrollTop: 0}, 'fast');
                 var neptunkod = $('#neptunkod').val();
                 var szak_id = $('#szak_id').val();
-                if (index >= kerdesek.length - 1) {
+                if (index >= kerdesek.length - 2) {
                     document.getElementById("tovabb").style.display = "none";
                     document.getElementById("megjegyzes").style.display = "block";
                 }
-                document.getElementById("kerdes").innerHTML = kerdesek[index].kerdes;
-                document.getElementById("valasz").innerHTML = kerdesek[index].valasz1 + ',' +kerdesek[index].valasz2 + ','+kerdesek[index].valasz3 + ','+kerdesek[index].valasz4 + ','+kerdesek[index].valasz5;
                 index++;
+                if (index == 1) {
+                    document.getElementById("vissza").style.display = "block";
+                }
+                document.getElementById("kerdes").innerHTML = kerdesek[index].kerdes;
+                document.getElementById("valasz").innerHTML = kerdesek[index].valasz1 + ',' + kerdesek[index].valasz2 + ',' + kerdesek[index].valasz3 + ',' + kerdesek[index].valasz4 + ',' + kerdesek[index].valasz5;
                 $('#kerdes_id').val(index);
                 tantargyak.forEach(function (tantargy) {
                     var pont = $("input[name=valaszok" + tantargy.id + "[]]:checked").val();
@@ -62,11 +70,16 @@
                     $('input[name=valaszok' + tantargy.id + '[]]').attr('checked', false);
                 });
                 vTomb.forEach(function (val) {
-                    if (index == val.kerdes_id) {
-                        $('input[name=valaszok' + val.tantargy_id + '[]]').attr('checked', true);
-                        console.log(val.valasz);
+                    if (index == val.kerdes_id - 1) {
+                        var radios = document.getElementsByName('valaszok' + val.tantargy_id + '[]');
+                        for (i = 0; i < radios.length; i++) {
+                            if (radios[i].value == val.valasz) {
+                                radios[i].checked = true;
+                            }
+                        }
                     }
                 });
+
             });
             $('#elkuld').click(function () {
                 $('html, body').animate({scrollTop: 0}, 'fast');
@@ -82,8 +95,6 @@
                 element.vegleges = 0;
                 element.megjegyzes = megjegyzes;
                 valaszok.push(element);
-                console.log(jsonString);
-                console.log(valaszok);
                 $.ajax({
                     type: "POST",
                     url: "kerdoivElkuldes",
@@ -95,6 +106,28 @@
                 });
                 window.location.replace('mentve');
             });
+            $('#vissza').click(function () {
+                index--;
+                document.getElementById("kerdes").innerHTML = kerdesek[index].kerdes;
+                document.getElementById("valasz").innerHTML = kerdesek[index].valasz1 + ',' + kerdesek[index].valasz2 + ',' + kerdesek[index].valasz3 + ',' + kerdesek[index].valasz4 + ',' + kerdesek[index].valasz5;
+                if (index <= 0) {
+                    document.getElementById("vissza").style.display = "none";
+                }
+                if (index >= kerdesek.length - 2) {
+                    document.getElementById("megjegyzes").style.display = "none";
+                    document.getElementById("tovabb").style.display = "block";
+                }
+                valaszok.forEach(function (val) {
+                    if (index == val.kerdes_id) {
+                        var radios = document.getElementsByName('valaszok' + val.tantargy_id + '[]');
+                        for (i = 0; i < radios.length; i++) {
+                            if (radios[i].value == val.pont) {
+                                radios[i].checked = true;
+                            }
+                        }
+                    }
+                });
+            });
             $('#veg').click(function () {
                 document.getElementById('veglegesit').style.display = 'none';
                 $('body').removeClass('stop-scrolling');
@@ -104,8 +137,6 @@
                 element.vegleges = 1;
                 element.megjegyzes = megjegyzes;
                 valaszok.push(element);
-                console.log(jsonString);
-                console.log(valaszok);
                 $.ajax({
                     type: "POST",
                     url: "kerdoivElkuldes",
@@ -135,12 +166,13 @@
         </form>
     </div>
     <div id="surveyContainer">
-        <input type="hidden" id="kerdes_id" value=1>
+        <input type="hidden" id="kerdes_id" value=0>
         <input type="hidden" id="utolso_kerdoiv" value={{$kerdoiv_id}}>
         <input type="hidden" id="szak_id" value={{$tantargyak[0]->szak_id}}>
         <input type="hidden" id="neptunkod" value={{$_SESSION['neptunkod']}}>
         <div class="kerdes" name="kerdes" id="kerdes">{{$kerdesek[0]->kerdes}}</div>
-        <div class="valasz" id="valasz">{{$kerdesek[0]->valasz1}},{{$kerdesek[0]->valasz2}},{{$kerdesek[0]->valasz3}},{{$kerdesek[0]->valasz4}},{{$kerdesek[0]->valasz5}}</div>
+        <div class="valasz" id="valasz">{{$kerdesek[0]->valasz1}},{{$kerdesek[0]->valasz2}},{{$kerdesek[0]->valasz3}}
+            ,{{$kerdesek[0]->valasz4}},{{$kerdesek[0]->valasz5}}</div>
         <div class="optionsContainer">
             @foreach($tantargyak as $index =>$tantargy)
                 <div class="answers">
@@ -160,13 +192,22 @@
         </div>
 
         <div style="padding-left: 150px; padding-bottom: 50px; display: none" id="megjegyzes">
-    <textarea id="megjegyzesArea"
-              style="width: 90%;height: 100px;color: black; padding: 0 5px; spellcheck :'false'; resize: none;"
-              placeholder="Írd be a megjegyzésed"></textarea>
+            @if($megjegyzes != " ")
+                <textarea id="megjegyzesArea"
+                          style="width: 90%;height: 100px;color: black; padding: 0 5px; spellcheck :'false'; resize: none;"
+                          placeholder="Írd be a megjegyzésed">{{$megjegyzes}}</textarea>
+            @else
+                <textarea id="megjegyzesArea"
+                          style="width: 90%;height: 100px;color: black; padding: 0 5px; spellcheck :'false'; resize: none;"
+                          placeholder="Írd be a megjegyzésed"></textarea>
+            @endif
         </div>
+
+
     </div>
     <div id="buttons">
         <input type="submit" name="action" value="Tovább" class="button" id="tovabb"/>
+        <input type="submit" name="action" value="Vissza" class="button" id="vissza" style="display: none"/>
         <input type="submit" name="action" value="Elküld" class="button" id="elkuld"/>
     </div>
     <div style="padding: 40px">

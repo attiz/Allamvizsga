@@ -38,8 +38,10 @@ Route::get('logoutTanar', 'TanarController@logoutTanar');
 Route::post('addTanar', 'TanarController@addTanar');
 Route::post('modositTanar', 'TanarController@modositTanar');
 Route::post('modositTanarAdatok', 'TanarController@modositTanarAdatok');
+Route::post('modositTanarSzures', 'TanarController@modositTanarSzures');
 Route::post('torolTanar', 'TanarController@torolTanar');
 Route::post('frissitTanar', 'TanarController@frissitTanar');
+Route::get('frissitTanar', 'TanarController@tanarFrissites');
 
 Route::get('importExportKerdesek', 'KerdesController@showView');
 Route::post('addKerdes', 'KerdesController@addKerdes');

@@ -8,12 +8,6 @@
     <script type="text/javascript">
         $(document).ready(function () {
             $('#szerkesztes').click(function () {
-                $("#nev").attr("readonly", false);
-                $("#tanszek").attr("readonly", false);
-                $("#fokozat").attr("readonly", false);
-                $("#email").attr("readonly", false);
-                $("#profilMentes").attr('value', 'ment');
-                document.getElementById("szerkesztes").style.display = "none";
                 document.getElementById("mentes").style.display = "block";
             });
         });
@@ -37,19 +31,20 @@
 </div>
 
 <div id="tanarAdatok">
-    <form action="modositTanarAdatok" method="post">
+    <form action="modositTantargyAdatok" method="post">
         <input type="hidden" name="_token" value="{!! csrf_token() !!}">
-        <input type="hidden" id="profilMentes" value="0" name="profilMentes"/>
+        <input type="hidden" id="profilMentes" value="ment" name="profilMentes"/>
         <input type="hidden" id="ora_id" value={{$adatok[0]->id}} name="ora_id"/>
+        <input type="hidden" id="szak_id" value={{$adatok[0]->szak}} name="szak_id"/>
         <div class="labelDiv">
             <label>Tantárgy</label>
-            <select name="tantargy" class="modositTantargy">
+            <select name="tantargy" class="modositTantargy" readonly>
                 <option value={{$adatok[0]->tantargy_id}}>{{$adatok[0]->nev}}</option>
             </select>
         </div>
         <div class="labelDiv">
             <label>Tanár</label>
-            <select name="tantargy" class="modositTantargy">
+            <select name="tanar" class="modositTantargy" readonly>
                 @foreach($tanarok as $tanar)
                     @if($adatok[0]->tanar_id == $tanar->id)
                         <option value={{$tanar->id}} selected>{{$tanar->nev}}</option>
@@ -59,8 +54,7 @@
                 @endforeach
             </select>
         </div>
-        <input type="button" id="szerkesztes" value="Szerkesztés"></inputbutton>
-        <button type="submit" id="mentes" style="display: none">Mentés</button>
+        <button type="submit" id="mentes">Mentés</button>
     </form>
 </div>
 </body>

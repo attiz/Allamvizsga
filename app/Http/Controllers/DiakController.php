@@ -71,7 +71,7 @@ class DiakController extends Controller
         $acces = $result[0]->ossz;
 
         if ($acces == 1) {
-            return back()->with('hiba', 'Ez a neptun kod már létezik!');
+            return back()->with('hiba', 'Ez a neptun kód már létezik!');
         }
 
         $student->save();
