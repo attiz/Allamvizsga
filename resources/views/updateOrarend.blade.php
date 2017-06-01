@@ -31,6 +31,17 @@
                 document.getElementById('popup3').style.display = 'none';
                 $('body').removeClass('stop-scrolling');
             });
+            $('.torolTanar').click(function () {
+                ora_id = $(this).val();
+                $('#oraID').val(ora_id);
+                $('html, body').animate({scrollTop: 0}, 'fast');
+                document.getElementById('popupTorol').style.display = 'block';
+                $('body').addClass('stop-scrolling');
+            });
+            $('#nem').click(function () {
+                document.getElementById('popupTorol').style.display = 'none';
+                $('body').removeClass('stop-scrolling');
+            });
         });
     </script>
 </head>
@@ -62,7 +73,7 @@
     </div>
     <div id="popup3">
         <form action="feltoltOrak" method="post" enctype="multipart/form-data">
-            <input type="hidden" name="_token" value="{{ csrf_token() }}">
+            <input type="hidden" name="_token" value="{!! csrf_token() !!}">
             <p class="popupTitle">Órák feltöltése</p>
             <div class="popupButtonContainer">
                 <input type="file" name="import_orak" id="import_orak">
@@ -71,6 +82,20 @@
                 <button type="button" id="megse3">Mégse</button>
             </div>
         </form>
+    </div>
+    <div id="popupTorol">
+        <div id="torles">
+            <p class="popupTitle">Biztosan törli?</p>
+            <div class="popupButtonContainer">
+                <form action="torolOra" method="post">
+                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                    <input type="hidden" name="oraID" id="oraID" value="0">
+                    <button id="igen">Törlés</button>
+                    <button id="nem" type="button">Mégse</button>
+                </form>
+
+            </div>
+        </div>
     </div>
     <form id="orarendUpdate">
         <div class="buttons">
@@ -183,7 +208,7 @@
             </div>
             @foreach($orarend as $ora)
                 <div class="tanar">
-                    <button class="torolTanar" style="float: right;"><span>Töröl</span>
+                    <button class="torolTanar" style="float: right;" value={{$ora->id}}><span>Töröl</span>
                     </button>
                     <form action="modositTantargy" method="post">
                         <input type="hidden" name="_token" value="{{ csrf_token()}}">

@@ -8,15 +8,11 @@ use App\Szak;
 use App\Orak;
 use DB;
 use Excel;
+use Illuminate\Support\Facades\Redirect;
 use Input;
 
 class OrarendController extends Controller
 {
-    public function showView()
-    {
-        return view('feldolgozOrarend');
-    }
-
     public function feltoltTantargy(Request $request)
     {
 
@@ -104,8 +100,8 @@ class OrarendController extends Controller
                             $osztaly = $this->levagSzakSzam($orak['osztaly']);
                         }
                         if ($orak['tanar'] != NULL) {
-                            if ( $orak['tantargy'] != NULL) {
-                                if($this->getTanarID($orak['tanar']) != NULL && $this->getTantargyID($orak['tantargy']) != NULL && $this->getSzakID($osztaly) != NULL) {
+                            if ($orak['tantargy'] != NULL) {
+                                if ($this->getTanarID($orak['tanar']) != NULL && $this->getTantargyID($orak['tantargy']) != NULL && $this->getSzakID($osztaly) != NULL) {
                                     if (!$this->letezikOra($this->getTanarID($orak['tanar']), $this->getTantargyID($orak['tantargy']), $this->getSzakID($osztaly))) {
                                         $insert[] = ['tanar_id' => $this->getTanarID($orak['tanar']), 'tantargy_id' => $this->getTantargyID($orak['tantargy']),
                                             'szak_id' => $this->getSzakID($osztaly), 'felev' => $this->melyikFelev()];
@@ -166,12 +162,34 @@ class OrarendController extends Controller
         $orarend = DB::select(DB::raw("select tt.id as id,t.nev, ta.nev as tantargy, szak_id from tanar_tantargy tt,tanar t,tantargy ta where tt.szak_id = :szak_id and tt.tanar_id = t.id and tt.tantargy_id = ta.id and tt.felev = :felev order by ta.nev;")
             , array('szak_id' => $szak_id, 'felev' => $felev));
         $szakok = DB::select(DB::raw("SELECT * FROM szak;"));
-        return view('updateOrarend', ['szakok' => $szakok, 'orarend' => $orarend,'szak'=>$szak_id,'felev'=>$felev]);
+        return view('updateOrarend', ['szakok' => $szakok, 'orarend' => $orarend, 'szak' => $szak_id, 'felev' => $felev]);
     }
 
     public function addOra()
     {
-        return view('addOra');
+        $szakok = DB::select(DB::raw("select * from szak;"));
+        $tantargyak = DB::select(DB::raw("select * from tantargy;"));
+        $tanarok = DB::select(DB::raw("select * from tanar;"));
+        return view('addOra', ['szakok' => $szakok, 'tantargyak' => $tantargyak, 'tanarok' => $tanarok]);
+    }
+
+    function addOraAdatok()
+    {
+        $ora = new Orak;
+        $tanar = $_POST['tanar'];
+        $tantargy = $_POST['tantargy'];
+        $szak = $_POST['szak'];
+        $ora->tanar_id = $tanar;
+        $ora->tantargy_id = $tantargy;
+        $ora->szak_id = $szak;
+        $ora->felev = $this->melyikFelev();
+        $ora->save();
+        return back()->with('siker', 'Sikeres hozzáadás!');
+    }
+
+    function torolOra(){
+        Orak::where('id', $_POST['oraID'])->delete();
+        return Redirect::to('updateOrarend');
     }
 
     function doktorLevagas(string $nev)

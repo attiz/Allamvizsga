@@ -9,12 +9,12 @@
         $(document).ready(function () {
             $('#szerkesztes').click(function () {
                 $("#nev").attr("readonly", false);
-                $("#tanszek").attr("readonly", false);
                 $("#fokozat").attr("readonly", false);
                 $("#email").attr("readonly", false);
                 $("#profilMentes").attr('value', 'ment');
                 document.getElementById("szerkesztes").style.display = "none";
                 document.getElementById("mentes").style.display = "block";
+                $("#selectTanszek").removeAttr('disabled');
             });
         });
     </script>
@@ -47,7 +47,15 @@
         </div>
         <div class="labelDiv">
             <label>Tanszék</label>
-            <input type="text" id="tanszek" name="tanszek" readonly value="{{$adatok[0]->tanszek}}"/>
+            <select name="tanszek" id="selectTanszek" disabled>
+                @foreach($tanszekek as $tanszek)
+                    @if($adatok[0]->tanszek == $tanszek->id)
+                        <option value={{$tanszek->id}} selected >{{$tanszek->nev}}</option>
+                    @else
+                        <option value={{$tanszek->id}} >{{$tanszek->nev}}</option>
+                    @endif
+                @endforeach
+            </select>
         </div>
         <div class="labelDiv">
             <label>Fokozat</label>

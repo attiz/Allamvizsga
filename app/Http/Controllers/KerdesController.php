@@ -11,11 +11,6 @@ use Illuminate\Support\Facades\Input;
 
 class KerdesController extends Controller
 {
-    public function showView()
-    {
-        return view('excel.importExportKerdesek');
-    }
-
     public function importKerdesek(Request $request)
     {
         if($request->hasFile('import_file')) {

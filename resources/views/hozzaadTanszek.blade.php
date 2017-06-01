@@ -1,14 +1,26 @@
-<!DOCTYPE html>
-<html lang="hu">
+<html lang="en">
 <head>
     <title>Tanárok frissítése</title>
     <meta charset="utf-8">
     <link href="{{ asset('/css/adminStyle.css') }}" rel="stylesheet">
+    <script src="http://code.jquery.com/jquery-1.4.3.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#importDiak').click(function () {
+                document.getElementById("popup").style.display = "block";
+                $('body').addClass('stop-scrolling');
+            });
+            $('#megse').click(function () {
+                document.getElementById('popup').style.display = 'none';
+                $('body').removeClass('stop-scrolling');
+            });
+        });
+    </script>
 </head>
 <body>
 <div id="table">
     <div id="top">
-        <h2>Új tanár hozzáadása</h2>
+        <h2>Új tanszék hozzáadása</h2>
         @if ($message = Session::get('siker'))
             <div class="alert alert-success" role="alert">
                 {{ Session::get('siker') }}
@@ -21,28 +33,16 @@
         @endif
     </div>
 </div>
-
-
 <div id="tanarAdatok">
-    <form action="{{ URL::to('addTanar') }}" method="post">
+    <form action="{{ URL::to('hozzaadTanszek') }}" method="post">
         <input type="hidden" name="_token" value="{!! csrf_token() !!}">
-        <div class="labelDiv">
-            <label>Név</label>
-            <input type="text" id="nev" contenteditable="true" name="nev"/>
-        </div>
         <div class="labelDiv">
             <label>Tanszék</label>
             <input type="text" id="tanszek" contenteditable="true" name="tanszek"/>
-        </div>
-        <div class="labelDiv">
-            <label>Funkció</label>
-            <input type="text" id="funkcio" contenteditable="true" name="funkcio"/>
-        </div>
-        <div class="labelDiv">
-            <label>Email</label>
-            <input type="text" id="email" contenteditable="true" name="email"/>
         </div>
         <button type="submit" id="hozzaad">Hozzáad</button>
     </form>
 </div>
 </body>
+
+</html>

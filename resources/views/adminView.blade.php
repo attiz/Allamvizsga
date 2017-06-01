@@ -10,8 +10,15 @@
             $('#jelszo').click(function () {
                 document.getElementById("popupJelszo").style.display = "block";
                 $('body').addClass('stop-scrolling');
+                document.getElementById('regi').value = "";
+                document.getElementById('uj').value = "";
+                document.getElementById('uj2').value = "";
             });
             $('#megse').click(function () {
+                document.getElementById('popupJelszo').style.display = 'none';
+                $('body').removeClass('stop-scrolling');
+            });
+            $('#jelszoCsere').click(function () {
                 document.getElementById('popupJelszo').style.display = 'none';
                 $('body').removeClass('stop-scrolling');
             });
@@ -21,13 +28,14 @@
 <body>
 <div id="container">
     <div id="popupJelszo">
-        <form>
+        <form action="jelszoCsere" target="container2" method="post">
+            <input type="hidden" name="_token" value="{{ csrf_token() }}">
             <p class="popupTitle">Jelszó módosítás</p>
             <div class="popupButtonContainer">
-                <label>Régi jelszó</label><input type="password">
-                <label>Új jelszó</label><input type="password">
-                <label>Új jelszó még egyszer</label><input type="password">
-                <button type="button" id="feltoltTanar">Mentés</button>
+                <label>Régi jelszó</label><input type="password" name="regi" id="regi">
+                <label>Új jelszó</label><input type="password" name="uj" id="uj">
+                <label>Új jelszó még egyszer</label><input type="password" name="uj2" id="uj2">
+                <button type="submit" id="jelszoCsere">Mentés</button>
                 <button type="button" id="megse">Mégse</button>
             </div>
         </form>
@@ -38,6 +46,7 @@
             <li><a href="importExportDiakok" target="container2">Diákok kezelése</a></li>
             <li><a href="updateKerdes" target="container2">Kérdések kezelése</a></li>
             <li><a href="updateOrarend" target="container2">Tantárgyak kezelése</a></li>
+            <li><a href="updateTanszek" target="container2">Tanszékek kezelése</a></li>
             <li><a href="statisztikaEgyeni" target="container2">Statisztika</a></li>
             <li class="dropdown" style="padding-right: 30px; float: right">
                 <a href="javascript:void(0)" class="dropbtn">Üdvözöljük,<b>{{$_SESSION['tanar']}}</b>!</a>

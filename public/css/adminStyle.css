@@ -401,6 +401,27 @@ select {
     float: right;
 }
 
+#selectTanszek{
+    -webkit-border-radius: 20px;
+    -moz-border-radius: 20px;
+    border-radius: 20px;
+    background: transparent no-repeat scroll 319px center;
+    color: #256E43;
+    text-align: center;
+    overflow: hidden;
+    width: 390px;
+    font-size: 15px;
+    box-shadow: 1px 1px 11px #d3d3d3;
+    float: right;
+}
+
+#selectTanszek option{
+    background-color: transparent;
+    color: #256E43;
+    opacity: .7;
+    z-index: -1;
+}
+
 .modositTantargy option{
     background-color: transparent;
     color: #256E43;

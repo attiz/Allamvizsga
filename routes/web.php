@@ -42,8 +42,8 @@ Route::post('modositTanarSzures', 'TanarController@modositTanarSzures');
 Route::post('torolTanar', 'TanarController@torolTanar');
 Route::post('frissitTanar', 'TanarController@frissitTanar');
 Route::get('frissitTanar', 'TanarController@tanarFrissites');
+Route::post('jelszoCsere', 'TanarController@jelszoCsere');
 
-Route::get('importExportKerdesek', 'KerdesController@showView');
 Route::post('addKerdes', 'KerdesController@addKerdes');
 Route::post('importKerdesek', 'KerdesController@importKerdesek');
 Route::get('exportKerdesek', 'KerdesController@exportKerdesek');
@@ -77,9 +77,21 @@ Route::get('feldolgozOrarend', 'OrarendController@showView');
 Route::get('updateOrarend', 'OrarendController@updateOrarend');
 Route::post('showOrarend', 'OrarendController@showOrarend');
 Route::get('addOra', 'OrarendController@addOra');
+Route::post('torolOra', 'OrarendController@torolOra');
+Route::post('addOraAdatok', 'OrarendController@addOraAdatok');
 Route::post('modositTantargy', 'TantargyController@modositTantargy');
 Route::post('modositTantargyAdatok', 'TantargyController@modositTantargyAdatok');
 
 Route::get('kitoltve', 'KerdoivController@kitoltve');
 Route::get('mentve', 'KerdoivController@mentve');
 Route::get('info', 'KerdoivController@info');
+
+Route::get('updateTanszek', 'TanszekController@showView');
+Route::get('updateTanszek', 'TanszekController@showView');
+Route::get('hozzaadTanszek', 'TanszekController@hozzaadTanszekView');
+Route::post('modositTanszek', 'TanszekController@modositTanszek');
+Route::get('modositTanszek', 'TanszekController@modositTanszek');
+Route::post('modositTanszekAdatok', 'TanszekController@modositTanszekAdatok');
+Route::post('hozzaadTanszek', 'TanszekController@hozzaadTanszek');
+Route::post('torolTanszek', 'TanszekController@torolTanszek');
+

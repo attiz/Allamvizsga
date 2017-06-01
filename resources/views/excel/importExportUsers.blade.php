@@ -134,7 +134,7 @@
                     <span class="tan"><b>@if($tanar->nev == NULL) - @else{{$tanar->nev}} @endif</b></span>
                 </div>
                 <div style="width: 250px; float: left">
-                    <span class="tanszek"><b>@if($tanar->tanszek == NULL) - @else{{$tanar->tanszek}} @endif</b></span>
+                    <span class="tanszek"><b>@if($tanar->tansz == NULL) - @else{{$tanar->tansz}} @endif</b></span>
                 </div>
                 <div style="width: 250px; float: left">
                     <span class="tan"><b>@if($tanar->fokozat == NULL) - @else{{$tanar->fokozat}} @endif</b></span>

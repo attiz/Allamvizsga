@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Tanszek;
 use Illuminate\Http\Request;
 
 use App\Tanar;
@@ -14,7 +15,7 @@ class TanarController extends Controller
 {
     public function showView()
     {
-        $tanarok = DB::select(DB::raw("SELECT * FROM tanar order by nev;"));
+        $tanarok = DB::select(DB::raw("SELECT tanar.*,tanszek.nev as tansz FROM tanar left outer JOIN tanszek ON tanar.tanszek = tanszek.id order by tanar.nev;"));
         return view('excel.importExportUsers', ['tanarok' => $tanarok]);
     }
 
@@ -29,11 +30,8 @@ class TanarController extends Controller
 
         $username = Input::get("username");
         $passw = Input::get("passw");
-        $result = DB::select(DB::raw("SELECT Count(*) as ossz FROM tanar WHERE felhasznalo like :felhasznalo and jelszo like :jelsz"), array(
-            'felhasznalo' => $username,
-            'jelsz' => $passw,
-        ));
-        $acces = $result[0]->ossz;
+        $passwHash = DB::select(DB::raw("SELECT jelszo FROM tanar WHERE felhasznalo like :felhasznalo"), array('felhasznalo' => $username));
+        $res = password_verify($passw, $passwHash[0]->jelszo);
         $nev = DB::select(DB::raw("SELECT id,nev FROM tanar WHERE felhasznalo like :felhasznalo"), array(
             'felhasznalo' => $username,
         ));
@@ -41,12 +39,12 @@ class TanarController extends Controller
             'felhasznalo' => $username,
         ));
 
-        if ($acces != 0 && $statusz[0]->statusz == 1) {
+        if ($res && $statusz[0]->statusz == 1) {
             $_SESSION['tanar'] = $nev[0]->nev;
             $_SESSION['tanar_id'] = $nev[0]->id;
 
             return Redirect::to('tanar');
-        } elseif ($acces != 0 && $statusz[0]->statusz == 2) {
+        } elseif ($res && $statusz[0]->statusz == 2) {
             $_SESSION['tanar'] = $nev[0]->nev;
             $_SESSION['tanar_id'] = $nev[0]->id;
             return Redirect::to('admin');
@@ -68,7 +66,8 @@ class TanarController extends Controller
                 foreach ($data as $tanarok) {
                     if (!empty($tanarok)) {
                         if (!$this->letezik($tanarok['nev'])) {
-                            $insert[] = ['nev' => $this->doktorLevagas($tanarok['nev']), 'felhasznalo' => $this->generateUsername($this->clean($tanarok['nev'])), 'jelszo' => $this->generatePassword($tanarok['nev'])];
+                            $insert[] = ['nev' => $this->doktorLevagas($tanarok['nev']), 'felhasznalo' => $this->generateUsername($this->clean($tanarok['nev'])),
+                                'jelszo' => password_hash($this->generatePassword($tanarok['nev']), PASSWORD_DEFAULT)];
                         }
                     }
 
@@ -98,7 +97,7 @@ class TanarController extends Controller
     {
         if ($request->hasFile('import_file')) {
             $path = $request->file('import_file')->getRealPath();
-
+            $vektor = array();
             $data = Excel::load($path, function ($reader) {
             })->get();
             if (!empty($data) && $data->count()) {
@@ -107,19 +106,28 @@ class TanarController extends Controller
                     if (!empty($tanarok)) {
                         if ($this->megfeleltet($tanarok['nev']) == 1) {
                             $insert[] = ['nev' => $tanarok['nev'], 'tanszek' => $tanarok['tanszek'], 'fokozat' => $tanarok['fokozat']];
+                            array_push($vektor, $tanarok['tanszek']);
                         }
                     }
                 }
-
+                $tanszekek = array_unique($vektor, SORT_REGULAR);
                 if (!empty($insert)) {
+                    if (!empty($tanszekek)) {
+                        foreach ($tanszekek as $tansz) {
+                            if(!$this->letezikTanszek($tansz)) {
+                                $tanszek = new Tanszek;
+                                $tanszek->nev = $tansz;
+                                $tanszek->save();
+                            }
+                        }
+                    }
                     foreach ($insert as $tanar) {
                         $tan = Tanar::where('nev', $tanar['nev'])->firstOrFail();
                         $tan->nev = $tanar['nev'];
-                        $tan->tanszek = $tanar['tanszek'];
+                        $tan->tanszek = $this->getTanszekID($tanar['tanszek']);
                         $tan->fokozat = $tanar['fokozat'];
                         $tan->save();
                     }
-
                     return back()->with('success', "Sikeres!");
                 }
 
@@ -130,7 +138,8 @@ class TanarController extends Controller
 
     public function addTanarView()
     {
-        return view('addTanar');
+        $tanszekek = DB::select(DB::raw("SELECT * FROM tanszek"));
+        return view('addTanar',['tanszekek'=>$tanszekek]);
     }
 
     public function addTanar(Request $request)
@@ -138,7 +147,7 @@ class TanarController extends Controller
         $tanar = new tanar;
         $tanar->nev = Input::get("nev");
         $tanar->felhasznalo = $this->generateUsername(Input::get("nev"));
-        $tanar->jelszo = $this->generatePassword(Input::get("nev"));
+        $tanar->jelszo = password_hash($this->generatePassword(Input::get("nev")), PASSWORD_DEFAULT);
         $tanar->tanszek = Input::get("tanszek");
         $tanar->fokozat = Input::get("funkcio");
         $tanar->email = Input::get("email");
@@ -151,7 +160,7 @@ class TanarController extends Controller
         $string = $this->HuToEn($name);
         $string2 = $this->splitName($string);
         $username = strtolower($string2);
-        $szam = mt_rand(0, 1000);
+        $szam = mt_rand(0, 10000);
         return $username . strval($szam);
     }
 
@@ -200,7 +209,9 @@ class TanarController extends Controller
         $adatok = DB::select(DB::raw("SELECT * FROM tanar WHERE id = :tanar_id"), array(
             'tanar_id' => $_SESSION['tanar_id'],
         ));
-        return view('profil', ['adatok' => $adatok]);
+        $tanszekek = DB::select(DB::raw("SELECT * FROM tanszek"));
+
+        return view('profil', ['adatok' => $adatok,'tanszekek'=>$tanszekek]);
     }
 
     function modositProfil()
@@ -228,13 +239,16 @@ class TanarController extends Controller
             $adatok = DB::select(DB::raw("SELECT * FROM tanar WHERE id = :tanar_id"), array(
                 'tanar_id' => $_POST['tanar_id'],
             ));
+            $tanszekek = DB::select(DB::raw("SELECT * FROM tanszek"));
+
             $_SESSION['modositTanarId'] = $_POST['tanar_id'];
-            return view('modositTanar', ['adatok' => $adatok]);
+            return view('modositTanar', ['adatok' => $adatok,'tanszekek'=>$tanszekek]);
         } else {
             $adatok = DB::select(DB::raw("SELECT * FROM tanar WHERE id = :tanar_id"), array(
                 'tanar_id' => $_SESSION['modositTanarId'],
             ));
-            return view('modositTanar', ['adatok' => $adatok]);
+            $tanszekek = DB::select(DB::raw("SELECT * FROM tanszek"));
+            return view('modositTanar', ['adatok' => $adatok,'tanszekek'=>$tanszekek]);
         }
     }
 
@@ -256,15 +270,17 @@ class TanarController extends Controller
 
     }
 
-    function modositTanarSzures(){
+    function modositTanarSzures()
+    {
         $tanarok = DB::select(DB::raw("SELECT id,nev FROM tanar order by nev;"));
-        $adatok = DB::select(DB::raw("SELECT * FROM tanar where id = :id;"),array('id'=>$_POST['tanarok']));
-        return view('updateTanar',['adatok'=>$adatok,'tanarok'=>$tanarok,'kivalasztott' => $_POST['tanarok']]);
+        $adatok = DB::select(DB::raw("SELECT * FROM tanar where id = :id;"), array('id' => $_POST['tanarok']));
+        return view('updateTanar', ['adatok' => $adatok, 'tanarok' => $tanarok, 'kivalasztott' => $_POST['tanarok']]);
     }
 
-    function tanarFrissites(){
+    function tanarFrissites()
+    {
         $tanarok = DB::select(DB::raw("SELECT id,nev FROM tanar order by nev;"));
-        return view('updateTanar',['tanarok'=>$tanarok]);
+        return view('updateTanar', ['tanarok' => $tanarok]);
     }
 
     function torolTanar()
@@ -290,6 +306,30 @@ class TanarController extends Controller
         return view('login/loginTanar');
     }
 
+    function jelszoCsere()
+    {
+        session_start();
+        $regi = Input::get("regi");
+        $uj = Input::get("uj");
+        $uj2 = Input::get("uj2");
+        $felhasznalo = DB::select(DB::raw("SELECT felhasznalo FROM tanar WHERE id like :id"), array('id' => $_SESSION['tanar_id']));
+        $passwHash = DB::select(DB::raw("SELECT jelszo FROM tanar WHERE felhasznalo like :felhasznalo"), array('felhasznalo' => $felhasznalo[0]->felhasznalo));
+        $talal = password_verify($regi, $passwHash[0]->jelszo);
+        if ($talal) {
+            if (strcmp($uj, $uj2) == 0) {
+                $ujJelszo = password_hash($uj, PASSWORD_DEFAULT);
+                $user = Tanar::where('felhasznalo', '=', $felhasznalo[0]->felhasznalo)->first();
+                $user->jelszo = $ujJelszo;
+                $user->save();
+                return Redirect::to('profil')->with('siker', 'A jelszava megváltozott!');
+            } else {
+                return Redirect::to('profil')->with('hiba', 'A két jelszó nem egyezik!');
+            }
+        } else {
+            return Redirect::to('profil')->with('hiba', 'Rossz régi jelszó!');
+        }
+    }
+
     function doktorLevagas(string $nev)
     {
         $arr = explode(",", $nev, 2);
@@ -311,11 +351,30 @@ class TanarController extends Controller
 
     function letezik(string $nev)
     {
-        $tanar = Tanar::where('nev', '=', $nev)->first();
+        $tanarNev = $this->doktorLevagas($nev);
+        $tanar = Tanar::where('nev', '=', $tanarNev)->first();
         if ($tanar == null) {
             return 0;
         } else {
             return 1;
+        }
+    }
+
+    public function getTanszekID(String $nev)
+    {
+        $id = DB::select(DB::raw("SELECT id FROM tanszek where nev= :nev"), array('nev' => $nev));
+        return @$id[0]->id;
+    }
+
+    function letezikTanszek(string $nev)
+    {
+        $van = DB::select(DB::raw("SELECT count(*) as ossz FROM tanszek WHERE nev = :nev"), array(
+            'nev' => $nev,
+        ));
+        if ($van[0]->ossz != 0) {
+            return 1;
+        } else {
+            return 0;
         }
     }
 }
