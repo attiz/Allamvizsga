@@ -96,6 +96,7 @@ class KerdoivController extends Controller
                         $valasz->tanev = $this->melyikTanev();
                         $valasz->felev = $this->melyikFelev();
                         $valasz->save();
+                        MentettValaszok::where("neptunkod",'=',$_SESSION['neptunkod'])->delete();
                     }
                 }
                 if (end($valaszok)["megjegyzes"] != NULL) {

@@ -12,18 +12,19 @@
 */
 
 Route::get('/welcome', function () {
-    return view('welcome');
+    return view('login');
 });
 
-Route::get('loginDiak', 'DiakController@showLogin');
+Route::get('login', 'DiakController@showLogin');
+Route::get('bejelentkezes', 'DiakController@showLogin2');
+Route::get('bejelentkezes2', 'DiakController@showLogin3');
 Route::post('loginDiak', 'DiakController@loginDiak');
-
-Route::get('loginTanar', 'TanarController@showLogin');
-Route::post('loginTanar', 'TanarController@loginTanar');
 
 Route::get('selectTantargyak','TantargyController@getTantargyak');
 Route::post('generateTantargyak','TantargyController@generateTantargyak');
 
+Route::post('loginTanar', 'TanarController@loginTanar');
+Route::get('loginTanar', 'TanarController@showLogin');
 Route::get('importExportTanar', 'TanarController@showView');
 Route::post('importTanar', 'TanarController@importTanar');
 Route::get('exportTanar', 'TanarController@exportTanar');
@@ -66,9 +67,9 @@ Route::get('betoltKerdoiv','KerdoivController@betoltKerdoiv');
 Route::post('kerdoivKitoltes','KerdoivController@kerdoivKitoltes');
 Route::post('kerdoivElkuldes', 'KerdoivController@kerdoivElkuldes');
 
-Route::get('statisztikaEgyeni','Statisztika@showView');
-Route::post('statisztikaElonezet','Statisztika@statisztikaElonezet');
-Route::post('statisztikaExport','Statisztika@statisztikaExport');
+Route::get('statisztikaEgyeni','StatisztikaController@showView');
+Route::post('statisztikaElonezet','StatisztikaController@statisztikaElonezet');
+Route::post('statisztikaExport','StatisztikaController@statisztikaExport');
 
 Route::post('feltoltTantargy', 'OrarendController@feltoltTantargy');
 Route::post('feltoltOsztaly', 'OrarendController@feltoltOsztaly');
@@ -94,4 +95,6 @@ Route::get('modositTanszek', 'TanszekController@modositTanszek');
 Route::post('modositTanszekAdatok', 'TanszekController@modositTanszekAdatok');
 Route::post('hozzaadTanszek', 'TanszekController@hozzaadTanszek');
 Route::post('torolTanszek', 'TanszekController@torolTanszek');
+
+
 

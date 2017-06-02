@@ -9,11 +9,11 @@ use App\Kerdes;
 use Input;
 use Mail;
 
-class Statisztika extends Controller
+class StatisztikaController extends Controller
 {
     public function showView(){
-        $tanarok = DB::select( DB::raw("select * from tanar"));
-        $szakok = DB::select( DB::raw("select * from szak"));
+        $tanarok = DB::select( DB::raw("select * from tanar order by nev"));
+        $szakok = DB::select( DB::raw("select * from szak order by szaknev"));
         return view('statisztika',['tanarok'=>$tanarok,'szakok'=>$szakok]);
     }
 

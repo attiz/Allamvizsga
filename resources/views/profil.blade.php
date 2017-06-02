@@ -9,6 +9,7 @@
         $(document).ready(function () {
             $('#szerkesztes').click(function () {
                 $("#nev").attr("readonly", false);
+                $("#felhasznalo").attr("readonly", false);
                 $("#tanszek").attr("readonly", false);
                 $("#fokozat").attr("readonly", false);
                 $("#email").attr("readonly", false);
@@ -43,6 +44,10 @@
         <div class="labelDiv">
             <label>Név</label>
             <input type="text" id="nev" name="nev" readonly value="{{$adatok[0]->nev}}"/>
+        </div>
+        <div class="labelDiv">
+            <label>Felhasználónév</label>
+            <input type="text" id="felhasznalo" name="felhasznalo" readonly value="{{$adatok[0]->felhasznalo}}"/>
         </div>
         <div class="labelDiv">
             <label>Tanszék</label>

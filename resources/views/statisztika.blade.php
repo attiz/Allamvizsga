@@ -15,6 +15,7 @@
         <div class="selector">
             <span>Tanár</span>
             <select name="tanarok">
+                <option value = 0>Összes tanár</option>
                 @foreach($tanarok as $tanar)
                     <option value={{$tanar->id}}>{{$tanar->nev}}</option>
                 @endforeach
@@ -24,6 +25,7 @@
         <div class="selector">
             <span>Szak</span>
             <select name="szakok">
+                <option value = 0>Összes szak</option>
                 @foreach($szakok as $szak)
                     <option value={{$szak->id}}>{{$szak->szaknev}}</option>
                 @endforeach

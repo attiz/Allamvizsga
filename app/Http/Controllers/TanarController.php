@@ -31,7 +31,12 @@ class TanarController extends Controller
         $username = Input::get("username");
         $passw = Input::get("passw");
         $passwHash = DB::select(DB::raw("SELECT jelszo FROM tanar WHERE felhasznalo like :felhasznalo"), array('felhasznalo' => $username));
-        $res = password_verify($passw, $passwHash[0]->jelszo);
+        if ($passwHash != null){
+            $res = password_verify($passw, $passwHash[0]->jelszo);
+        }else{
+            return Redirect::to('bejelentkezes2')->with(['error'=> 'Rossz felhasználónév vagy jelszó!','felh'=>1]);
+        }
+
         $nev = DB::select(DB::raw("SELECT id,nev FROM tanar WHERE felhasznalo like :felhasznalo"), array(
             'felhasznalo' => $username,
         ));
@@ -49,7 +54,7 @@ class TanarController extends Controller
             $_SESSION['tanar_id'] = $nev[0]->id;
             return Redirect::to('admin');
         } else {
-            return back()->with('success', 'Rossz felhasználónév vagy jelszó!');
+            return Redirect::to('bejelentkezes2')->with(['error'=> 'Rossz felhasználónév vagy jelszó!','felh'=>1]);
         }
     }
 
@@ -220,15 +225,21 @@ class TanarController extends Controller
         if ($_POST['profilMentes'] == 'ment') {
             $tanar = Tanar::whereid($_SESSION['tanar_id'])->firstOrFail();
             $nev = Input::get("nev");
-            $tanszek = Input::get("tanszek");
-            $fokozat = Input::get("fokozat");
-            $email = Input::get("email");
-            $tanar->nev = $nev;
-            $tanar->tanszek = $tanszek;
-            $tanar->fokozat = $fokozat;
-            $tanar->email = $email;
-            $tanar->save();
-            return back()->with('siker', 'Sikeres mentés!');
+            $felhasznalo = Input::get("felhasznalo");
+            if ($this->letezikFelhasznalo($felhasznalo)){
+                return back()->with('siker', 'Már van ilyen felhasználónév!');
+            }else {
+                $tanszek = Input::get("tanszek");
+                $fokozat = Input::get("fokozat");
+                $email = Input::get("email");
+                $tanar->nev = $nev;
+                $tanar->felhasznalo = $felhasznalo;
+                $tanar->tanszek = $tanszek;
+                $tanar->fokozat = $fokozat;
+                $tanar->email = $email;
+                $tanar->save();
+                return back()->with('siker', 'Sikeres mentés!');
+            }
         }
     }
 
@@ -303,7 +314,7 @@ class TanarController extends Controller
         session_unset();
         unset($_SESSION["tanar"]);
         $_SESSION = array();
-        return view('login/loginTanar');
+        return view('bejelentkezes2');
     }
 
     function jelszoCsere()
@@ -375,6 +386,17 @@ class TanarController extends Controller
             return 1;
         } else {
             return 0;
+        }
+    }
+
+    function letezikFelhasznalo(string $felhasznalo){
+        $van = DB::select(DB::raw("SELECT count(*) as ossz FROM tanar WHERE felhasznalo = :nev"), array(
+            'nev' => $felhasznalo,
+        ));
+        if ($van[0]->ossz != 0) {
+            return 1; //van
+        } else {
+            return 0; //nincs
         }
     }
 }

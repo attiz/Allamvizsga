@@ -21,7 +21,16 @@ class DiakController extends Controller
 
     public function showLogin()
     {
-        return view('login.loginDiak');
+        return view('login');
+    }
+
+    function showLogin2()
+    {
+        return view('bejelentkezes');
+    }
+    function showLogin3()
+    {
+        return view('bejelentkezes2');
     }
 
     public function loginDiak()
@@ -56,7 +65,7 @@ class DiakController extends Controller
             }
 
         } else {
-            return back()->with('success', 'Nincs ilyen neptun kód!');
+            return Redirect::to('bejelentkezes')->with('hiba', 'Nincs ilyen neptun kód!');
         }
     }
 
@@ -139,7 +148,7 @@ class DiakController extends Controller
         session_start();
         unset($_SESSION['neptunkod']);
         session_destroy();
-        return Redirect::to('loginDiak');
+        return Redirect::to('bejelentkezes');
     }
 
     function letezik(string $neptunkod){
