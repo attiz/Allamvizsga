@@ -1,0 +1,1 @@
+select * from valaszok where tanar_id = 977;

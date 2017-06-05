@@ -11,7 +11,7 @@ class TantargyController extends Controller
 
     public function getTantargyak(){
         session_start();
-        $szakok = DB::select( DB::raw("select * from szak;"));
+        $szakok = DB::select( DB::raw("select * from szak order by szaknev;"));
         return view('selectTantargyak',['szakok' => $szakok]);
     }
 
@@ -24,7 +24,7 @@ class TantargyController extends Controller
         $szaknev = DB::select(DB::raw("select szaknev from szak where id = :id;"),array('id'=>$szak));
         $nev = $szaknev[0]->szaknev;
         $tantargyak = DB::select( DB::raw("select * from tanar_tantargy,tanar,tantargy where tantargy.id = tanar_tantargy.tantargy_id and 
-            tanar.id = tanar_tantargy.tanar_id and szak_id  = :szak and felev = :felev"), //a kivalasztott szaknak a tantargyainak lekerese
+            tanar.id = tanar_tantargy.tanar_id and szak_id  = :szak and felev = :felev order by tantargy.nev"), //a kivalasztott szaknak a tantargyainak lekerese
             array('szak'=> $szak,'felev'=>$this->melyikFelev()));
         foreach ($tantargyak as $tantargy){
             array_push($osszesTantargy,$tantargy->id);

@@ -147,7 +147,6 @@ class DiakController extends Controller
     {
         session_start();
         unset($_SESSION['neptunkod']);
-        session_destroy();
         return Redirect::to('bejelentkezes');
     }
 

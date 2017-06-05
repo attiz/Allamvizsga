@@ -26,6 +26,8 @@
             var dekodolva = valaszokTomb.replace(/&quot;/g, '"');
             var vTomb = JSON.parse(dekodolva);
             var index = $('#kerdes_id').val();
+            var neptunkod = $('#neptunkod').val();
+            var szak_id = $('#szak_id').val();
             vTomb.forEach(function (val) {
                 if (index == val.kerdes_id - 1) {
                     var radios = document.getElementsByName('valaszok' + val.tantargy_id + '[]');
@@ -39,8 +41,7 @@
 
             $('#tovabb').click(function () {
                 $('html, body').animate({scrollTop: 0}, 'fast');
-                var neptunkod = $('#neptunkod').val();
-                var szak_id = $('#szak_id').val();
+
                 if (index >= kerdesek.length - 2) {
                     document.getElementById("tovabb").style.display = "none";
                     document.getElementById("megjegyzes").style.display = "block";
@@ -79,12 +80,39 @@
                         }
                     }
                 });
+                valaszok.forEach(function (val) {
+                    if (index == val.kerdes_id) {
+                        var radios = document.getElementsByName('valaszok' + val.tantargy_id + '[]');
+                        for (i = 0; i < radios.length; i++) {
+                            if (radios[i].value == val.pont) {
+                                radios[i].checked = true;
+                            }
+                        }
+                    }
+                });
 
             });
             $('#elkuld').click(function () {
                 $('html, body').animate({scrollTop: 0}, 'fast');
                 document.getElementById("veglegesit").style.display = "block";
                 $('body').addClass('stop-scrolling');
+                tantargyak.forEach(function (tantargy) {
+                    var pont = $("input[name=valaszok" + tantargy.id + "[]]:checked").val();
+                    console.log(pont);
+                    if (pont == null) {
+                        pont = 0;
+                    }
+                    var tanar = $('#' + tantargy.id + '').val();
+                    var element = {};
+                    element.utolso_kerdoiv = $('#utolso_kerdoiv').val();
+                    element.kerdes_id = index;
+                    element.tantargy_id = tantargy.id;
+                    element.tanar_id = tanar;
+                    element.pont = pont;
+                    element.neptunkod = neptunkod;
+                    element.szak_id = szak_id;
+                    valaszok.push(element);
+                });
             });
             $('#ment').click(function () {
                 document.getElementById('veglegesit').style.display = 'none';
@@ -95,6 +123,7 @@
                 element.vegleges = 0;
                 element.megjegyzes = megjegyzes;
                 valaszok.push(element);
+                console.log(valaszok);
                 $.ajax({
                     type: "POST",
                     url: "kerdoivElkuldes",

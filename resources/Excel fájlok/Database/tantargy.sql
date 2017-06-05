@@ -4,4 +4,4 @@ create table tantargy(id int(5) primary key auto_increment,nev varchar(200),rovi
 
 select * from tantargy where nev like 'f%';
 select count(*) from tantargy;
-select * from tantargy;
+select * from tantargy where id = 139;

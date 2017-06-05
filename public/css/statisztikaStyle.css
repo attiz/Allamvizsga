@@ -131,6 +131,16 @@ button{
     color: #000000;
 }
 
+.val{
+    line-height: 20px;
+    margin: 0 3vw;
+    display: inline-block;
+    width: 90%;
+    font-size: 12px;
+    font-style: italic;
+    color: #000000;
+}
+
 .ossz {
     line-height: 20px;
     margin: 0 3vw;
@@ -277,4 +287,36 @@ button{
 #selectors {
     display: inline-block;
     float: right;
+}
+
+.kerdes {
+    color: white;
+    background-color: #256E43;
+    padding-top: 50px;
+    padding-bottom: 20px;
+    width: 100%;
+    height: 50px;
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+    box-shadow: 3px 3px 2px #5C5C5C;
+}
+
+#kikuldes {
+    width: 15px;
+    height: 15px;
+    position: relative;
+    margin: 10px auto;
+    background: #fcfff4;
+    background: linear-gradient(top, #fcfff4 0%, #dfe5d7 40%, #b3bead 100%);
+    border-radius: 50px;
+    box-shadow: inset 0px 1px 1px white, 0px 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+#kikuldesLabel
+{
+    font-family: Georgia, "Times New Roman", Times, serif;
+    font-size: 15px;
+    color: #ffffff;
+    padding: 5px;
 }

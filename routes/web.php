@@ -68,8 +68,14 @@ Route::post('kerdoivKitoltes','KerdoivController@kerdoivKitoltes');
 Route::post('kerdoivElkuldes', 'KerdoivController@kerdoivElkuldes');
 
 Route::get('statisztikaEgyeni','StatisztikaController@showView');
-Route::post('statisztikaElonezet','StatisztikaController@statisztikaElonezet');
+Route::post('statisztikaEgyeni','StatisztikaController@statisztikaEgyeni');
+Route::post('statisztikaMegjelenit','StatisztikaController@statisztikaMegjelenit');
 Route::post('statisztikaExport','StatisztikaController@statisztikaExport');
+Route::post('getTantargyak','StatisztikaController@getTantargyak');
+Route::post('getSzakok','StatisztikaController@getSzakok');
+Route::get('emailKuldes','StatisztikaController@emailKuldes');
+Route::get('emailElkuldve','StatisztikaController@emailElkuldve');
+Route::get('emailElkuldveInfo','StatisztikaController@emailElkuldveInfo');
 
 Route::post('feltoltTantargy', 'OrarendController@feltoltTantargy');
 Route::post('feltoltOsztaly', 'OrarendController@feltoltOsztaly');
