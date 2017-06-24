@@ -17,21 +17,30 @@
             $("#tanarok").change(function () {
                 var tanarID = $(this).val();
                 select = document.getElementById('szakok');
+                select2 = document.getElementById('tantargyak');
                 document.getElementById("szakok").options.length = 1;
                 document.getElementById("tantargyak").options.length = 1;
                 $.ajax({
                     type: "POST",
                     url: 'getSzakok',
                     data: 'tanar_id=' + tanarID,
-                    success: function (szakok) {
+                    success: function (adatok) {
+//                        window.alert(JSON.stringify(adatok));
                         $('#tanarID').val(tanarID);
-                        var obj = szakok.szakok;
-                        var array = Object.values(obj);
-                        array.forEach(function (tant) {
+                        var array = Object.values(adatok);
+                        var szakok = Object.values(array[0].szakok);
+                        var tantargyak = Object.values(array[0].tantargyak);
+                        szakok.forEach(function (tant) {
                             var opt = document.createElement('option');
                             opt.value = tant.id;
                             opt.innerHTML = tant.nev;
                             select.appendChild(opt);
+                        });
+                        tantargyak.forEach(function (tant) {
+                            var opt = document.createElement('option');
+                            opt.value = tant.id;
+                            opt.innerHTML = tant.nev;
+                            select2.appendChild(opt);
                         });
                     }
                 });
@@ -143,8 +152,14 @@
         <div class="buttons">
             <button type="submit" name="action" value="mehet">Mehet</button>
             <button type="submit" name="action" value="export">Exportálás</button>
-            <input type="checkbox" name="kikuldes" id="kikuldes">
-            <label id="kikuldesLabel">kiküldés e-mailbe</label>
+            {{Form::close()}}
+            @if(isset($admin))
+                <div class="selector">
+                    {{Form::open(array('url' => 'emailKuldes','method' => 'POST'))}}
+                    <button id="leallit" type="submit" value="export">Kérdőív leállítása</button>
+                    {{Form::close()}}
+                </div>
+            @endif
         </div>
     </div>
     @if(isset($nincs))
@@ -165,8 +180,10 @@
                     </div>
                     @foreach($valaszok as $valasz)
                         <div class="question"><span class="ker">{{$valasz->kerdes}}</span>
-                            {{--<br><span class="val">{{$valasz->valasz1}},{{$valasz->valasz2}},{{$valasz->valasz3}},{{$valasz->valasz4}},{{$valasz->valasz5}}</span>--}}
                             <span class="atlag">{{$valasz->atlag}}</span>
+                            <br><span class="val">{{$valasz->valasz1}},{{$valasz->valasz2}},{{$valasz->valasz3}}
+                                ,{{$valasz->valasz4}},{{$valasz->valasz5}}</span>
+
                         </div>
                     @endforeach
                     <div class="osszesites"><span class="ossz">Összesített átlag</span><span
@@ -179,7 +196,7 @@
 
             </div>
         </section>
-        {{Form::close()}}
+
     @endif
 </div>
 

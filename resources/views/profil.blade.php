@@ -14,6 +14,7 @@
                 $("#fokozat").attr("readonly", false);
                 $("#email").attr("readonly", false);
                 $("#selectTanszek").removeAttr('disabled');
+                $("#selectFokozat").removeAttr('disabled');
                 $("#profilMentes").attr('value', 'ment');
                 document.getElementById("szerkesztes").style.display = "none";
                 document.getElementById("mentes").style.display = "block";
@@ -52,6 +53,9 @@
         <div class="labelDiv">
             <label>Tanszék</label>
             <select name="tanszek" id="selectTanszek" disabled>
+                @if($adatok[0]->tanszek == NULL)
+                    <option value="0" disabled selected>Válasszon tanszéket</option>
+                @endif
                 @foreach($tanszekek as $tanszek)
                     @if($adatok[0]->tanszek == $tanszek->id)
                         <option value={{$tanszek->id}} selected >{{$tanszek->nev}}</option>
@@ -63,7 +67,18 @@
         </div>
         <div class="labelDiv">
             <label>Fokozat</label>
-            <input type="text" id="fokozat" name="fokozat" readonly value="{{$adatok[0]->fokozat}}"/>
+            <select name="fokozat" id="selectFokozat" disabled>
+                @if($adatok[0]->fokozat == NULL)
+                    <option value="0" disabled selected>Válasszon fokozatot</option>
+                @endif
+                @foreach($fokozatok as $fokozat)
+                    @if(@$adatok[0]->fokozat == $fokozat->id)
+                        <option value={{$fokozat->id}} selected>{{$fokozat->fokozat}}</option>
+                    @else
+                        <option value={{$fokozat->id}} >{{$fokozat->fokozat}}</option>
+                    @endif
+                @endforeach
+            </select>
         </div>
         <div class="labelDiv">
             <label>Email</label>

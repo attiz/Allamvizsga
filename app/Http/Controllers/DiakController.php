@@ -19,21 +19,16 @@ class DiakController extends Controller
         return view('excel.importExportDiakok');
     }
 
-    public function showLogin()
-    {
-        return view('login');
-    }
-
-    function showLogin2()
+      function bejelentkezes()
     {
         return view('bejelentkezes');
     }
-    function showLogin3()
+    function bejelentkezes2()
     {
         return view('bejelentkezes2');
     }
 
-    public function loginDiak()
+    public function bejelentkezesDiak()
     {
         session_start();
         $kod = Input::get("neptun");
@@ -44,7 +39,7 @@ class DiakController extends Controller
 
         if ($acces == 1) {
             $_SESSION['neptunkod'] = $kod;
-            $res = DB::select(DB::raw("SELECT Count(*) as ossz FROM mentes WHERE neptunkod = :somevariable"), array(
+            $res = DB::select(DB::raw("SELECT Count(*) as ossz FROM mentes,kerdoiv WHERE neptunkod = :somevariable and kerdoiv.kerdoiv_id = mentes.kerdoiv_id and kerdoiv.aktiv = 1;"), array(
                 'somevariable' => $kod,
             ));
             $res2 = DB::select(DB::raw("SELECT kitoltott FROM diak WHERE neptun = :somevariable"), array(
@@ -100,8 +95,8 @@ class DiakController extends Controller
 
                 foreach ($data as $neptunkodok) {
                     if (!empty($neptunkodok)) {
-                        if(!$this->letezik($neptunkodok['hallgato_neptun_kodja'])) { //megnezi hogy letezik-e mar
-                            $insert[] = ['neptun' => $neptunkodok['hallgato_neptun_kodja']];
+                        if(!$this->letezik($neptunkodok['neptunkod'])) { //megnezi hogy letezik-e mar
+                            $insert[] = ['neptun' => $neptunkodok['neptunkod']];
                         }
                     }
                 }
@@ -117,11 +112,11 @@ class DiakController extends Controller
         return back()->with('error', 'Hiba történt!');
     }
 
-    public function exportDiak(Request $request)
+    public function exportDiak()
     {
         $data = Diak::get()->toArray();
         return Excel::create('neptunkodok', function ($excel) use ($data) {
-            $excel->sheet('mySheet', function ($sheet) use ($data) {
+            $excel->sheet('neptunkodok', function ($sheet) use ($data) {
                 $sheet->fromArray($data);
             });
         })->download();

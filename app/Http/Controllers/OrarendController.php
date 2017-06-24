@@ -115,11 +115,11 @@ class OrarendController extends Controller
             $adatok = array_unique($insert, SORT_REGULAR);
             if (!empty($adatok)) {
                 Orak::insert($adatok);
-                return back()->with('success3', "Sikeres!");
+                return Redirect::to('updateOrarend')->with('success3', "Sikeres!");
             }
 
         }
-        return back()->with('error3', 'Hiba!');
+        return Redirect::to('updateOrarend')->with('error3', 'Hiba!');
     }
 
 

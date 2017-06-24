@@ -98,6 +98,16 @@
                                     <button type="submit">Frissítés
                                     </button>
                                     <span id="tanarSpan">Tanárok adatainak frissítése</span>
+                                    @if ($message = Session::get('siker'))
+                                        <div class="alert alert-success" role="alert">
+                                            {{ Session::get('siker') }}
+                                        </div>
+                                    @endif
+                                    @if ($message = Session::get('err'))
+                                        <div class="alert alert-danger" role="alert">
+                                            {{ Session::get('err') }}
+                                        </div>
+                                    @endif
                                 </form>
                             </div>
                         </div>
@@ -137,7 +147,7 @@
                     <span class="tanszek"><b>@if($tanar->tansz == NULL) - @else{{$tanar->tansz}} @endif</b></span>
                 </div>
                 <div style="width: 250px; float: left">
-                    <span class="tan"><b>@if($tanar->fokozat == NULL) - @else{{$tanar->fokozat}} @endif</b></span>
+                    <span class="tan"><b>@if($tanar->fok == NULL) - @else{{$tanar->fok}} @endif</b></span>
                 </div>
                 <div style="width: 250px; float: left">
                     <span class="tan"><b>@if($tanar->email == NULL) - @else{{$tanar->email}} @endif</b></span>

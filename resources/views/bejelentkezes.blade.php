@@ -27,7 +27,7 @@
                     </div>
                 @endif
             </div>
-            <form class="login-form" method="post" action="{{ URL::to('loginDiak') }}" accept-charset="UTF-8">
+            <form class="login-form" method="post" action="{{ URL::to('bejelentkezesDiak') }}" accept-charset="UTF-8">
                 <input type="hidden" name="_token" value="{!! csrf_token() !!}">
 
 

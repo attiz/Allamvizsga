@@ -6,4 +6,7 @@ create table szak(id int(5) primary key auto_increment,szaknev varchar(100));
 select * from diak;
 select count(*) from szak;
 
+select * from tanar_tantargy where  
+                          tanar_tantargy.tanar_id =977;
+
 

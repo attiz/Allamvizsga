@@ -89,6 +89,8 @@
                         for (i = 0; i < radios.length; i++) {
                             if (radios[i].value == val.pont) {
                                 radios[i].checked = true;
+                            }else{
+                                radios[i].checked = false;
                             }
                         }
                     }
@@ -100,7 +102,6 @@
                 $('body').addClass('stop-scrolling');
                 tantargyak.forEach(function (tantargy) {
                     var pont = $("input[name=valaszok" + tantargy.id + "[]]:checked").val();
-                    console.log(pont);
                     if (pont == null) {
                         pont = 0;
                     }
@@ -114,6 +115,7 @@
                     element.neptunkod = neptunkod;
                     element.szak_id = szak_id;
                     valaszok.push(element);
+                    console.log(valaszok);
                 });
             });
             $('#ment').click(function () {

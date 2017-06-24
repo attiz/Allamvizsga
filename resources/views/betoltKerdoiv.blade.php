@@ -152,6 +152,8 @@
                         for (i = 0; i < radios.length; i++) {
                             if (radios[i].value == val.pont) {
                                 radios[i].checked = true;
+                            }else{
+                                radios[i].checked = false;
                             }
                         }
                     }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Tanszek;
+use App\Fokozat;
 use Illuminate\Http\Request;
 
 use App\Tanar;
@@ -15,14 +16,11 @@ class TanarController extends Controller
 {
     public function showView()
     {
-        $tanarok = DB::select(DB::raw("SELECT tanar.*,tanszek.nev as tansz FROM tanar left outer JOIN tanszek ON tanar.tanszek = tanszek.id order by tanar.nev;"));
+        $tanarok = DB::select(DB::raw("SELECT tanar.*,tanszek.nev as tansz,fokozat.fokozat as fok FROM tanar left outer JOIN tanszek ON tanar.tanszek = tanszek.id
+                                        left outer JOIN fokozat on  tanar.fokozat = fokozat.id order by tanar.nev;"));
         return view('excel.importExportUsers', ['tanarok' => $tanarok]);
     }
 
-    public function showLogin()
-    {
-        return view('login.loginTanar');
-    }
 
     public function loginTanar()
     {
@@ -103,6 +101,7 @@ class TanarController extends Controller
         if ($request->hasFile('import_file')) {
             $path = $request->file('import_file')->getRealPath();
             $vektor = array();
+            $vektor2 = array();
             $data = Excel::load($path, function ($reader) {
             })->get();
             if (!empty($data) && $data->count()) {
@@ -112,10 +111,12 @@ class TanarController extends Controller
                         if ($this->megfeleltet($tanarok['nev']) == 1) {
                             $insert[] = ['nev' => $tanarok['nev'], 'tanszek' => $tanarok['tanszek'], 'fokozat' => $tanarok['fokozat']];
                             array_push($vektor, $tanarok['tanszek']);
+                            array_push($vektor2, $tanarok['fokozat']);
                         }
                     }
                 }
                 $tanszekek = array_unique($vektor, SORT_REGULAR);
+                $fokozatok = array_unique($vektor2, SORT_REGULAR);
                 if (!empty($insert)) {
                     if (!empty($tanszekek)) {
                         foreach ($tanszekek as $tansz) {
@@ -126,11 +127,20 @@ class TanarController extends Controller
                             }
                         }
                     }
+                    if (!empty($fokozatok)) {
+                        foreach ($fokozatok as $fokoz) {
+                            if(!$this->letezikFokozat($fokoz)) {
+                                $fokozat = new Fokozat;
+                                $fokozat->fokozat = $fokoz;
+                                $fokozat->save();
+                            }
+                        }
+                    }
                     foreach ($insert as $tanar) {
                         $tan = Tanar::where('nev', $tanar['nev'])->firstOrFail();
                         $tan->nev = $tanar['nev'];
                         $tan->tanszek = $this->getTanszekID($tanar['tanszek']);
-                        $tan->fokozat = $tanar['fokozat'];
+                        $tan->fokozat = $this->getFokozatID($tanar['fokozat']);
                         $tan->save();
                     }
                     return back()->with('success', "Sikeres!");
@@ -144,7 +154,9 @@ class TanarController extends Controller
     public function addTanarView()
     {
         $tanszekek = DB::select(DB::raw("SELECT * FROM tanszek"));
-        return view('addTanar',['tanszekek'=>$tanszekek]);
+        $fokozatok = DB::select(DB::raw("SELECT * FROM fokozat"));
+        $funkcio = array('egyetemi tanár'=>1,'tanszékvezető'=>2,'dékán'=>3);
+        return view('hozzaadTanar',['tanszekek'=>$tanszekek,'funkcio'=>$funkcio,'fokozatok'=>$fokozatok]);
     }
 
     public function addTanar(Request $request)
@@ -154,8 +166,9 @@ class TanarController extends Controller
         $tanar->felhasznalo = $this->generateUsername(Input::get("nev"));
         $tanar->jelszo = password_hash($this->generatePassword(Input::get("nev")), PASSWORD_DEFAULT);
         $tanar->tanszek = Input::get("tanszek");
-        $tanar->fokozat = Input::get("funkcio");
+        $tanar->fokozat = Input::get("fokozat");
         $tanar->email = Input::get("email");
+        $tanar->funkcio = Input::get("funkcio");
         $tanar->save();
         return back()->with('siker', 'Sikeres hozzáadás!');
     }
@@ -215,8 +228,9 @@ class TanarController extends Controller
             'tanar_id' => $_SESSION['tanar_id'],
         ));
         $tanszekek = DB::select(DB::raw("SELECT * FROM tanszek"));
+        $fokozatok = DB::select(DB::raw("SELECT * FROM fokozat"));
 
-        return view('profil', ['adatok' => $adatok,'tanszekek'=>$tanszekek]);
+        return view('profil', ['adatok' => $adatok,'tanszekek'=>$tanszekek,'fokozatok'=>$fokozatok]);
     }
 
     function modositProfil()
@@ -246,20 +260,23 @@ class TanarController extends Controller
     function modositTanar()
     {
         session_start();
+        $funkcio = array('egyetemi tanár'=>1,'tanszékvezető'=>2,'dékán'=>3);
         if (isset($_POST['tanar_id'])) {
             $adatok = DB::select(DB::raw("SELECT * FROM tanar WHERE id = :tanar_id"), array(
                 'tanar_id' => $_POST['tanar_id'],
             ));
             $tanszekek = DB::select(DB::raw("SELECT * FROM tanszek"));
+            $fokozatok = DB::select(DB::raw("SELECT * FROM fokozat"));
 
             $_SESSION['modositTanarId'] = $_POST['tanar_id'];
-            return view('modositTanar', ['adatok' => $adatok,'tanszekek'=>$tanszekek]);
+            return view('modositTanar', ['adatok' => $adatok,'tanszekek'=>$tanszekek,'funkcio'=>$funkcio,'fokozatok'=>$fokozatok]);
         } else {
             $adatok = DB::select(DB::raw("SELECT * FROM tanar WHERE id = :tanar_id"), array(
                 'tanar_id' => $_SESSION['modositTanarId'],
             ));
             $tanszekek = DB::select(DB::raw("SELECT * FROM tanszek"));
-            return view('modositTanar', ['adatok' => $adatok,'tanszekek'=>$tanszekek]);
+            $fokozatok = DB::select(DB::raw("SELECT * FROM fokozat"));
+            return view('modositTanar', ['adatok' => $adatok,'tanszekek'=>$tanszekek,'funkcio'=>$funkcio,'fokozatok'=>$fokozatok]);
         }
     }
 
@@ -271,12 +288,34 @@ class TanarController extends Controller
             $tanszek = Input::get("tanszek");
             $fokozat = Input::get("fokozat");
             $email = Input::get("email");
+            $funkcio = Input::get("funkcio");
             $tanar->nev = $nev;
             $tanar->tanszek = $tanszek;
             $tanar->fokozat = $fokozat;
             $tanar->email = $email;
+            $tanar->funkcio = $funkcio;
             $tanar->save();
             return back()->with('siker', 'Sikeres mentés!');
+        }
+
+    }
+
+    function modositTanarAdatokSzures()
+    {
+        if ($_POST['profilMentes'] == 'ment') {
+            $tanar = Tanar::whereid($_POST['tanar_id'])->firstOrFail();
+            $nev = Input::get("nev");
+            $tanszek = Input::get("tanszek");
+            $fokozat = Input::get("fokozat");
+            $email = Input::get("email");
+            $funkcio = Input::get("funkcio");
+            $tanar->nev = $nev;
+            $tanar->tanszek = $tanszek;
+            $tanar->fokozat = $fokozat;
+            $tanar->email = $email;
+            $tanar->funkcio = $funkcio;
+            $tanar->save();
+            return Redirect::to('importExportTanar')->with('siker', 'Sikeres mentés!');
         }
 
     }
@@ -284,8 +323,11 @@ class TanarController extends Controller
     function modositTanarSzures()
     {
         $tanarok = DB::select(DB::raw("SELECT id,nev FROM tanar order by nev;"));
+        $tanszekek = DB::select(DB::raw("SELECT * FROM tanszek"));
+        $fokozatok = DB::select(DB::raw("SELECT * FROM fokozat"));
+        $funkcio = array('egyetemi tanár'=>1,'tanszékvezető'=>2,'dékán'=>3);
         $adatok = DB::select(DB::raw("SELECT * FROM tanar where id = :id;"), array('id' => $_POST['tanarok']));
-        return view('updateTanar', ['adatok' => $adatok, 'tanarok' => $tanarok, 'kivalasztott' => $_POST['tanarok']]);
+        return view('updateTanar', ['adatok' => $adatok, 'tanarok' => $tanarok, 'kivalasztott' => $_POST['tanarok'],'tanszekek'=>$tanszekek,'fokozatok'=>$fokozatok,'funkcio'=>$funkcio]);
     }
 
     function tanarFrissites()
@@ -376,6 +418,11 @@ class TanarController extends Controller
         $id = DB::select(DB::raw("SELECT id FROM tanszek where nev= :nev"), array('nev' => $nev));
         return @$id[0]->id;
     }
+    public function getFokozatID(String $fokozat)
+    {
+        $id = DB::select(DB::raw("SELECT id FROM fokozat where fokozat= :fokozat"), array('fokozat' => $fokozat));
+        return @$id[0]->id;
+    }
 
     function letezikTanszek(string $nev)
     {
@@ -389,9 +436,21 @@ class TanarController extends Controller
         }
     }
 
+    function letezikFokozat(string $fokozat)
+    {
+        $van = DB::select(DB::raw("SELECT count(*) as ossz FROM fokozat WHERE fokozat = :fokozat"), array(
+            'fokozat' => $fokozat,
+        ));
+        if ($van[0]->ossz != 0) {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
+
     function letezikFelhasznalo(string $felhasznalo){
-        $van = DB::select(DB::raw("SELECT count(*) as ossz FROM tanar WHERE felhasznalo = :nev"), array(
-            'nev' => $felhasznalo,
+        $van = DB::select(DB::raw("SELECT count(*) as ossz FROM tanar WHERE felhasznalo = :nev and id != :id"), array(
+            'nev' => $felhasznalo,'id'=>$_SESSION['tanar_id'],
         ));
         if ($van[0]->ossz != 0) {
             return 1; //van

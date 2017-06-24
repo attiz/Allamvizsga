@@ -15,10 +15,11 @@ Route::get('/welcome', function () {
     return view('login');
 });
 
-Route::get('login', 'DiakController@showLogin');
-Route::get('bejelentkezes', 'DiakController@showLogin2');
-Route::get('bejelentkezes2', 'DiakController@showLogin3');
-Route::post('loginDiak', 'DiakController@loginDiak');
+
+Route::get('bejelentkezes', 'DiakController@bejelentkezes');
+Route::get('bejelentkezes2', 'DiakController@bejelentkezes2');
+Route::post('bejelentkezesDiak', 'DiakController@bejelentkezesDiak');
+
 
 Route::get('selectTantargyak','TantargyController@getTantargyak');
 Route::post('generateTantargyak','TantargyController@generateTantargyak');
@@ -39,6 +40,7 @@ Route::get('logoutTanar', 'TanarController@logoutTanar');
 Route::post('addTanar', 'TanarController@addTanar');
 Route::post('modositTanar', 'TanarController@modositTanar');
 Route::post('modositTanarAdatok', 'TanarController@modositTanarAdatok');
+Route::post('modositTanarAdatokSzures', 'TanarController@modositTanarAdatokSzures');
 Route::post('modositTanarSzures', 'TanarController@modositTanarSzures');
 Route::post('torolTanar', 'TanarController@torolTanar');
 Route::post('frissitTanar', 'TanarController@frissitTanar');
@@ -73,9 +75,10 @@ Route::post('statisztikaMegjelenit','StatisztikaController@statisztikaMegjelenit
 Route::post('statisztikaExport','StatisztikaController@statisztikaExport');
 Route::post('getTantargyak','StatisztikaController@getTantargyak');
 Route::post('getSzakok','StatisztikaController@getSzakok');
-Route::get('emailKuldes','StatisztikaController@emailKuldes');
+Route::post('emailKuldes','StatisztikaController@emailKuldes');
 Route::get('emailElkuldve','StatisztikaController@emailElkuldve');
 Route::get('emailElkuldveInfo','StatisztikaController@emailElkuldveInfo');
+Route::get('kerdoivLeall','StatisztikaController@kerdoivLeall');
 
 Route::post('feltoltTantargy', 'OrarendController@feltoltTantargy');
 Route::post('feltoltOsztaly', 'OrarendController@feltoltOsztaly');
