@@ -89,7 +89,7 @@
         <input type="hidden" name="_token" value="{!! csrf_token() !!}">
         <div class="labelDiv">
             <label>Neptun kód</label>
-            <input type="text" id="neptunkod" contenteditable="true" name="neptunkod"/>
+            <input type="text" id="neptunkod" contenteditable="true" name="neptunkod" required/>
         </div>
         <button type="submit" id="hozzaad">Hozzáad</button>
     </form>

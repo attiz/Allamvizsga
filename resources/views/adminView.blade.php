@@ -32,9 +32,9 @@
             <input type="hidden" name="_token" value="{{ csrf_token() }}">
             <p class="popupTitle">Jelszó módosítás</p>
             <div class="popupButtonContainer">
-                <label>Régi jelszó</label><input type="password" name="regi" id="regi">
-                <label>Új jelszó</label><input type="password" name="uj" id="uj">
-                <label>Új jelszó még egyszer</label><input type="password" name="uj2" id="uj2">
+                <label>Régi jelszó</label><input type="password" name="regi" id="regi" required>
+                <label>Új jelszó</label><input type="password" name="uj" id="uj" required>
+                <label>Új jelszó még egyszer</label><input type="password" name="uj2" id="uj2" required>
                 <button type="submit" id="jelszoCsere">Mentés</button>
                 <button type="button" id="megse">Mégse</button>
             </div>

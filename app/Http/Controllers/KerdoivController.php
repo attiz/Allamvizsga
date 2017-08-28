@@ -30,15 +30,15 @@ class KerdoivController extends Controller
         } else {
             $kerdoiv_id++;
         }
-        if (isset($_POST['tantargyak']) && is_array($_POST['tantargyak'])) {
+        if (isset($_POST['tantargyak']) && is_array($_POST['tantargyak'])) { //kivalasztott tantargyak lekerese
 
             foreach ($_POST['tantargyak'] as $selected) {
                 list($tantargy_id, $tanar_id) = explode('|', $selected);
                 $results = DB::select(DB::raw("SELECT id,nev as tantargy FROM tantargy where id= :tantargy_id"), array('tantargy_id' => (int)$tantargy_id));
                 $results2 = DB::select(DB::raw("select tanar_id,nev from tanar_tantargy,tanar where tanar_tantargy.tanar_id = tanar.id and tanar_tantargy.tantargy_id = :tantargy_id and tanar_id = :tanar_id"),
                     array('tantargy_id' => (int)$tantargy_id, 'tanar_id' => (int)$tanar_id));
-                array_push($tantargyak, $results[0]);
-                array_push($tanarok, $results2[0]);
+                array_push($tantargyak, $results[0]); //kivalasztott tantargyak berakasa egy tombbe
+                array_push($tanarok, $results2[0]); //kivalasztott tanarok berakasa egy tombbe
             }
             $kerdoiv = new kerdoiv;
             $kerdoiv->kerdoiv_id = $kerdoiv_id;
@@ -48,11 +48,11 @@ class KerdoivController extends Controller
         return view('kerdoiv', ['kerdesek' => $kerdesek, 'tantargyak' => $tantargyak, 'tanarok' => $tanarok, 'utolso_kerdoiv' => $kerdoiv_id]);
     }
 
-    public function betoltKerdoiv()
+    public function betoltKerdoiv() //kitoltes folytatasa
     {
         session_start();
         $kerdesek = DB::select(DB::raw("SELECT * FROM kerdesek where aktiv=1"));
-        @$megj = DB::select(DB::raw("SELECT * FROM megjegyzes where neptunkod =:neptunkod"), array('neptunkod' => $_SESSION['neptunkod']));
+        @$megj = DB::select(DB::raw("SELECT * FROM megjegyzes where neptunkod =:neptunkod"), array('neptunkod' => $_SESSION['neptunkod'])); //megjegyzes lekerdezese ha letezik
         $megjegyzes = @$megj[0]->megjegyzes;
         if ($megjegyzes == NULL) {
             $megjegyzes = " ";
@@ -69,7 +69,7 @@ class KerdoivController extends Controller
             array_push($tanarok, $result[0]);
         }
 
-        $valaszok = DB::select(DB::raw("select * from mentes where neptunkod = :neptunkod;"),
+        $valaszok = DB::select(DB::raw("select * from mentes where neptunkod = :neptunkod;"), //valaszok lekerdezese
             array('neptunkod' => $_SESSION['neptunkod']));
 
         return view('betoltKerdoiv', ['kerdesek' => $kerdesek, 'kerdoiv_id' => $kerdoiv_id, 'tantargyak' => $tantargyak, 'tanarok' => $tanarok, 'valaszok' => $valaszok, 'megjegyzes' => $megjegyzes]);

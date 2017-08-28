@@ -34,27 +34,27 @@ class DiakController extends Controller
         $kod = Input::get("neptun");
         $result = DB::select(DB::raw("SELECT Count(*) as ossz FROM diak WHERE neptun = :somevariable"), array(
             'somevariable' => $kod,
-        ));
+        )); //bejelentkezes ellenorzes
         $acces = $result[0]->ossz;
 
         if ($acces == 1) {
             $_SESSION['neptunkod'] = $kod;
             $res = DB::select(DB::raw("SELECT Count(*) as ossz FROM mentes,kerdoiv WHERE neptunkod = :somevariable and kerdoiv.kerdoiv_id = mentes.kerdoiv_id and kerdoiv.aktiv = 1;"), array(
                 'somevariable' => $kod,
-            ));
+            )); //vane elmentett kerdoiv
             $res2 = DB::select(DB::raw("SELECT kitoltott FROM diak WHERE neptun = :somevariable"), array(
                 'somevariable' => $kod,
-            ));
+            )); //vane vegelgesitett kerdoiv
 
             $kitoltve = $res[0]->ossz;
             $vegleges = $res2[0]->kitoltott;
-            if ($vegleges == 1){
+            if ($vegleges == 1){ //ha mar volt veglegesitve
                 return Redirect::to('info');
             }
             else{
-                if ($kitoltve == 0){
+                if ($kitoltve == 0){ //ha nincs elmentett kerdoiv
                     return Redirect::to('selectTantargyak');
-                }elseif ($kitoltve != 0){
+                }elseif ($kitoltve != 0){ //ha van elmentett kerdoiv
                     return Redirect::to('betoltKerdoiv');
                 }
             }
@@ -65,7 +65,7 @@ class DiakController extends Controller
     }
 
 
-    public function addDiak(Request $request)
+    public function addDiak(Request $request) //diak hozzadadasa egyenkent
     {
         $student = new diak;
         $student->neptun = Input::get("neptunkod");
@@ -83,12 +83,12 @@ class DiakController extends Controller
         return back()->with('siker', 'Sikeres hozzáadás!');
     }
 
-    public function importDiak(Request $request)
+    public function importDiak(Request $request) //diak importalasa excelbol
     {
         if ($request->hasFile('import_file')) {
             $path = $request->file('import_file')->getRealPath();
 
-            $data = Excel::load($path, function ($reader) {
+            $data = Excel::load($path, function ($reader) { //adatok kiolvasasa tombbe
             })->get();
 
             if (!empty($data) && $data->count()) {
@@ -114,10 +114,10 @@ class DiakController extends Controller
 
     public function exportDiak()
     {
-        $data = Diak::get()->toArray();
-        return Excel::create('neptunkodok', function ($excel) use ($data) {
+        $data = Diak::get()->toArray(); //adatok lekerese adabazisbol
+        return Excel::create('neptunkodok', function ($excel) use ($data) { //excel file letrehozasa
             $excel->sheet('neptunkodok', function ($sheet) use ($data) {
-                $sheet->fromArray($data);
+                $sheet->fromArray($data); //a tomb adatainak beillesztese excel fajlba
             });
         })->download();
     }
